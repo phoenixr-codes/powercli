@@ -3,8 +3,23 @@ name = "PowerCLI"
 version = "0.1.0"
 authors = [{ name = "Jonas da Silva" }]
 description = "Build powerful command-line applications in Python"
+license = { text = "GPLv3" }
 readme = "README.md"
 requires-python = ">=3.12"
+keywords = ["cli", "command-line"]
+classifiers = [
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+  "Natural Language :: English",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Terminals",
+  "Topic :: Utilities",
+  "Typing :: Typed",
+]
 dependencies = [
   "adorable~=0.1.5",
   "attrs~=23.1.0",
@@ -32,6 +47,14 @@ dev = [
   "docstr-coverage>=2.3.2",
   "nox==2025.2.9", # mainly used for type hints; nox should be installed outside venv
 ]
+
+[project.urls]
+"Repository" = "https://github.com/phoenixr-codes/powercli"
+"Documentation" = "https://phoenixr-codes.github.io/powercli"
+"Bug Tracker" = "https://github.com/phoenixr-codes/powercli/issues"
+
+[project.scripts]
+powerdoc = "powerdoc.__init__:run"
 
 [tool.poetry]
 packages = [{ include = "powercli" }, { include = "powerdoc" }]
