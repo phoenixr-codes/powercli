@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<svg viewBox="0 0 400 100" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+ <defs>
+  <symbol id="svg_5" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg">
+   <!-- Created with SVG-edit - https://github.com/SVG-Edit/svgedit-->
+   <g class="layer" id="svg_1">
+    <title>Layer 1</title>
+    <rect fill="#ffde57" height="100" id="svg_4" rx="15" ry="15" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-opacity="null" stroke-width="0" transform="matrix(1, 0, 0, 1, 0, 0) matrix(0.707107, -0.707107, 0.707107, 0.707107, -198.025, 323.925)" width="400" x="90" y="360"/>
+    <rect fill="#4584b6" height="100" id="svg_3" rx="15" ry="15" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-opacity="null" stroke-width="0" transform="matrix(0.707107, 0.707107, -0.707107, 0.707107, 12.6461, -174.53)" width="400" x="265" y="10"/>
+   </g>
+  </symbol>
+ </defs>
+ <g class="layer">
+  <title>Layer 1</title>
+  <text fill="#4584b6" font-family="Helvetica" font-size="70" id="svg_2" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-opacity="null" stroke-width="0" text-anchor="middle" x="177.5" xml:space="preserve" y="75">Power</text>
+  <use id="svg_6" transform="matrix(0.931832, 0, 0, 0.874353, -72.2515, -63.7036)" x="-76.03" xlink:href="#svg_5" y="80.24"/>
+  <text fill="#ffde57" font-family="Helvetica" font-size="70" id="svg_7" stroke="#000000" stroke-dasharray="null" stroke-linecap="null" stroke-linejoin="null" stroke-opacity="null" stroke-width="0" text-anchor="middle" x="337.03" xml:space="preserve" y="75.5">CLI</text>
+ </g>
+</svg>
