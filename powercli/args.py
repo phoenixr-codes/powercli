@@ -164,13 +164,13 @@ class Flag[FV, PV, T](Argument):
     def __attrs_post_init__(self) -> None:
         # names
         if self.short is None and self.long is None:
-            raise RuntimeError("either `short` or `long` must be set")
+            raise ValueError("either `short` or `long` must be set")
         if self.short is not None and len(self.short) != 1:
-            raise RuntimeError("`short` must consist of exactly one character")
+            raise ValueError("`short` must consist of exactly one character")
         if self.short is None and (self.short_aliases | self.short_hidden_aliases):
-            raise RuntimeError("consider setting `short` before using aliases")
+            raise ValueError("consider setting `short` before using aliases")
         if self.long is None and (self.long_aliases | self.long_hidden_aliases):
-            raise RuntimeError("consider setting `long` before using aliases")
+            raise ValueError("consider setting `long` before using aliases")
         if names := _not_unique(
             self.short_aliases,
             self.short_hidden_aliases,
@@ -179,7 +179,7 @@ class Flag[FV, PV, T](Argument):
             self.long_hidden_aliases,
             (set() if self.long is None else {self.long}),
         ):
-            raise RuntimeError(f"name(s) {names} present twice or more")
+            raise ValueError(f"name(s) {names} present twice or more")
 
         # values and default
         self.method._validate_flag(self)
@@ -188,9 +188,9 @@ class Flag[FV, PV, T](Argument):
             if val is not Ellipsis:
                 continue
             if idx == 0:
-                raise RuntimeError("first item of `values` must not be `...`")
+                raise ValueError("first item of `values` must not be `...`")
             elif self.values[idx - 1] is Ellipsis:
-                raise RuntimeError(
+                raise ValueError(
                     f"`...` cannot follow `...` (index {idx - 1} and {idx})"
                 )
 
@@ -258,7 +258,7 @@ class Positional[FV, PV, T](Argument):
         return self.name
 
     def __repr__(self) -> str:
-        return f"<Positional #{self.identifier}>"
+        return f"<Positional #{self.identifier} ({self.name!r})>"
 
     @property
     def required(self) -> bool:

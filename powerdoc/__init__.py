@@ -8,6 +8,7 @@ from .cli import cmd as cli
 from .man import ManBuilder
 from .markdown import MarkdownBuilder
 
+
 def run() -> None:
     args = cli.parse_args()
 
