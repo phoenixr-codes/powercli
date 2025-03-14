@@ -15,18 +15,16 @@
 
 ## Installation
 
-PowerCLI is **not** available on PyPI.
-
 ### Poetry
 
 ```console
-poetry add git+https://github.com/phoenixr-codes/powercli.git#stable
+poetry add powercli-python
 ```
 
 ### uv
 
 ```console
-uv add git+https://github.com/phoenixr-codes/powercli.git --branch stable
+uv add powercli-python
 ```
 
 ### Manual Installation
@@ -35,7 +33,7 @@ Add `powercli`
 
 ```toml
 dependencies = [
-  "powercli @ git+https://github.com/phoenixr-codes/powercli.git#stable"
+  "powercli-python"
 ]
 ```
 
@@ -96,9 +94,3 @@ $ python3 -m powerdoc path/to/file.py --man | groff -T utf8 -man
 
 The built-in provided flags and commands make use of colored output respecting
 the user's preference.
-
-## Why is this not on PyPI?
-
-Development of this library paused in early 2024 and continued in early 2025.
-Between these time frames, a library named `powercli` has been registered on
-PyPI.

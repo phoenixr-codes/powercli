@@ -1,5 +1,5 @@
 [project]
-name = "PowerCLI"
+name = "powercli-python"
 version = "0.1.0"
 authors = [{ name = "Jonas da Silva" }]
 description = "Build powerful command-line applications in Python"
