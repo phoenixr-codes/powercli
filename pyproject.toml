@@ -22,8 +22,8 @@ classifiers = [
 ]
 dependencies = [
   "adorable~=0.1.5",
-  "attrs~=23.1.0",
-  "loguru~=0.7.2",
+  "attrs>=23.1.0",
+  "loguru>=0.7.2",
   "wraptext==1.0.1",
 ]
 
