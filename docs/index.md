@@ -3,9 +3,10 @@
 ```{toctree}
 :maxdepth: 2
 
-api/index
-tutorial/index
 guide/index
+tutorial/index
+api/index
+changelog
 ```
 
 <!-- deno-fmt-ignore-start -->
