@@ -190,8 +190,6 @@ def values(flag: Flag[Any, Any, Any]) -> str:
     for value in flag.values:
         if value is Ellipsis:
             result += "..."
-        elif flag.default is not None:
-            result += f"{' ' if result else ''}[{value[0]}]"
         else:
             result += f"{' ' if result else ''}<{value[0]}>"
     return result
