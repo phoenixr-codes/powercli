@@ -14,7 +14,7 @@ from attrs import Factory, define, field
 from loguru import logger
 
 from . import exceptions, methods, parser
-from .args import Argument, Flag, Positional
+from .args import Argument, Flag, Positional, VariadicPositional
 from .category import Category
 from .dependency import Resolver
 from .typedefs import Converter, Identifier
@@ -226,12 +226,23 @@ class Command[FV, PV]:
     def _positionals(self) -> list[Positional[FV, PV, PV]]:
         return [arg for arg in self._args.values() if isinstance(arg, Positional)]
 
+    @property
+    def _variadic_positional(self) -> VariadicPositional[FV, PV, PV] | None:
+        for arg in self._args.values():
+            if isinstance(arg, VariadicPositional):
+                return arg
+        return None
+
     def has_positional(self) -> bool:
         """Returns `True` when a positional is registered."""
         for arg in self._args.values():
             if isinstance(arg, Positional):
                 return True
         return False
+
+    def has_variadic_positional(self) -> bool:
+        """Returns `True` when a variadic positional is registered."""
+        return self._variadic_positional is not None
 
     def has_flag(self) -> bool:
         """Returns `True` when a flag is registered."""
@@ -258,6 +269,10 @@ class Command[FV, PV]:
                 and arg.has_long_name()
             ):
                 raise ValueError("long prefix is required for flag with long name only")
+        if self.has_variadic_positional() and isinstance(arg, Positional):
+            raise ValueError(
+                "positional cannot be registered after variadic positional"
+            )
         if self.has_subcommand() and isinstance(arg, Positional):
             raise ValueError("subcommands and positionals cannot co-exist")
         if (old := self._args.get(arg.identifier)) is not None:
@@ -293,6 +308,12 @@ class Command[FV, PV]:
         self.add_arg(arg)
         return self
 
+    def vpos(self, *args: Any, **kwargs: Any) -> Command[FV, PV]:
+        """Creates and registers a variadic positional to the command."""
+        arg: VariadicPositional[FV, PV, Any] = VariadicPositional(*args, **kwargs)
+        self.add_arg(arg)
+        return self
+
     def parse_args(self, args: list[str] | None = None) -> parser.ParsedCommand[FV, PV]:
         """Parses arguments from `args`, or, if `None` from `argv`."""
         if args is None:
@@ -306,6 +327,7 @@ class Command[FV, PV]:
             raw_args=args,
             parsed_flags=parsed_flags,
             parsed_positionals=parsed_positionals,
+            parsed_variadic_positional=None,
             parsed_commands=parsed_commands,
         )
 
@@ -325,6 +347,8 @@ class Command[FV, PV]:
                 switches[f.identifier] = False
 
         position = 0
+        variadic_pos_values: list[tuple[str, PV | str]] = []
+        done_parsing_variadics = False
 
         parts = ArgIterator(deque(args))
         for part in parts:
@@ -402,13 +426,45 @@ class Command[FV, PV]:
                     break
                 logger.debug("detected positional")
                 value = self._obtain_value(part, positional)
-                if value is not None:
-                    parsed_positionals.append(
-                        parser.ParsedPositional(
-                            arg=positional, raw_value=value[0], value=value[1]
-                        )
+                if done_parsing_variadics and isinstance(
+                    positional, VariadicPositional
+                ):
+                    raise RuntimeError("unexpected argument")  # TODO: improve error
+                if variadic_pos_values or isinstance(positional, VariadicPositional):
+                    variadic_pos_values.append(value)
+                    continue
+                parsed_positionals.append(
+                    parser.ParsedPositional(
+                        arg=positional, raw_value=value[0], value=value[1]
                     )
-                    position += 1
+                )
+                position += 1
+            done_parsing_variadics = True
+
+        if (
+            self._variadic_positional is not None
+            and len(variadic_pos_values) < self._variadic_positional.min
+        ):
+            raise exceptions.TooFewPositionalsError(
+                self._variadic_positional, len(variadic_pos_values)
+            )
+
+        if variadic_pos_values:
+            assert self._variadic_positional is not None
+            parsed_command._parsed_variadic_positional = (
+                parser.ParsedVariadicPositional(
+                    arg=self._variadic_positional,
+                    raw_values=[raw for (raw, _) in variadic_pos_values],
+                    values=[val for (_, val) in variadic_pos_values],
+                )
+            )
+        elif self.has_variadic_positional():
+            assert self._variadic_positional is not None
+            parsed_command._parsed_variadic_positional = (
+                parser.ParsedVariadicPositional(
+                    arg=self._variadic_positional, raw_values=[], values=[]
+                )
+            )
 
         depres = Resolver()
         for ident, deps in (
@@ -423,6 +479,8 @@ class Command[FV, PV]:
             """Yields all parsed arguments."""
             yield from parsed_flags
             yield from parsed_positionals
+            if (vpos := parsed_command._parsed_variadic_positional) is not None:
+                yield vpos
 
         def all_unparsed() -> Generator[Argument, None, None]:
             """Yields all unparsed arguments."""
@@ -587,7 +645,7 @@ class Command[FV, PV]:
     @staticmethod
     def _obtain_value(
         arg: str, positional: Positional[FV, PV, PV]
-    ) -> tuple[str, PV | str] | None:
+    ) -> tuple[str, PV | str]:
         """Obtains a single positional's value by converting it."""
         try:
             parsed_value = positional.into(arg)

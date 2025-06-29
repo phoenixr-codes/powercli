@@ -2,6 +2,7 @@ from typing import Never
 
 import pytest
 
+from powercli import exceptions
 from powercli.args import Flag, Positional
 from powercli.command import Command
 from powercli.utils import one_of, static
@@ -213,3 +214,83 @@ def test_positional_with_default() -> None:
     cmd.pos(identifier="p", name="POS", into=int, default=static(42))
     args = cmd.parse_args([])
     assert args.value_of_positional("p") == 42
+
+
+def test_variadic_positional() -> None:
+    cmd: Command[None, int] = Command()
+    cmd.vpos(identifier="p", name="POS", into=int, min=1)
+    args = cmd.parse_args(["1", "2", "3"])
+    assert args.values_of_variadic_positional() == [1, 2, 3]
+
+
+def test_variadic_positional_misplaced() -> None:
+    cmd: Command[None, int]
+
+    cmd = Command()
+    cmd.pos(identifier="a", name="POS", into=int)
+    cmd.vpos(identifier="b", name="POS", into=int)
+    with pytest.raises(ValueError):
+        cmd.pos(identifier="c", name="POS", into=int)
+
+    cmd = Command()
+    cmd.vpos(identifier="a", name="POS", into=int)
+    with pytest.raises(ValueError):
+        cmd.pos(identifier="b", name="POS", into=int)
+
+
+def test_too_many_variadic_positionals() -> None:
+    cmd: Command[None, int]
+
+    cmd = Command()
+    cmd.vpos(identifier="a", name="POS", into=int)
+    with pytest.raises(ValueError):
+        cmd.vpos(identifier="b", name="POS", into=int)
+
+
+def test_variadic_positional_and_subcommands() -> None:
+    cmd: Command[None, int]
+
+    cmd = Command()
+    cmd.vpos(identifier="p", name="POS", into=int)
+    subcommand = Command[None, int]()
+    with pytest.raises(ValueError):
+        cmd.add_subcommand(subcommand)
+
+
+def test_variadic_positional_min() -> None:
+    cmd: Command[None, int]
+
+    cmd = Command()
+    cmd.vpos(identifier="p", name="POS", into=int, min=3)
+    args = cmd.parse_args(["1", "2", "3", "4"])
+    assert args.values_of_variadic_positional() == [1, 2, 3, 4]
+
+
+def test_variadic_positional_too_few_values() -> None:
+    cmd: Command[None, int]
+
+    cmd = Command()
+    cmd.vpos(identifier="p", name="POS", into=int, min=3)
+    with pytest.raises(exceptions.TooFewPositionalsError):
+        cmd.parse_args(["1", "2"])
+
+    cmd = Command()
+    cmd.vpos(identifier="p", name="POS", into=int, min=3)
+    cmd.flag(identifier="f", short="f", values=[("A", int), ("B", int)])
+    with pytest.raises(RuntimeError):
+        cmd.parse_args(["1", "2", "-f", "8", "9", "3"])
+
+    cmd = Command()
+    cmd.vpos(identifier="p", name="POS", into=int, min=3)
+    cmd.flag(identifier="f", short="f", values=[("A", int)])
+    with pytest.raises(exceptions.TooFewPositionalsError):
+        cmd.parse_args(["1", "2", "-f", "8"])
+
+
+def test_variadic_positional_no_values() -> None:
+    cmd: Command[None, int]
+
+    cmd = Command()
+    cmd.vpos(identifier="p", name="POS", into=int, min=0)
+    args = cmd.parse_args([])
+    assert args.values_of_variadic_positional() == []

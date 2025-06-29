@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING, Any
 from attrs import define
 
 if TYPE_CHECKING:
-    from .args import Argument, Flag, Positional
+    from .args import Argument, Flag, Positional, VariadicPositional
     from .command import Command
     from .typedefs import Identifier
 
@@ -34,6 +34,9 @@ class ParsedCommand[FV, PV]:
 
     _parsed_positionals: list[ParsedPositional[PV]]
     """The positionals that have been parsed."""
+
+    _parsed_variadic_positional: ParsedVariadicPositional[PV] | None
+    """The variadic positional that has been parsed."""
 
     _parsed_commands: list[ParsedCommand[FV, PV]]
     """The subcommands that have been parsed."""
@@ -66,6 +69,12 @@ class ParsedCommand[FV, PV]:
             if arg.arg.identifier == identifier:
                 return arg.values
         raise RuntimeError(f"no such flag {identifier}")
+
+    def values_of_variadic_positional(self, /) -> Collection[PV | str] | None:
+        """Returns the values of the variadic positional if present."""
+        if self._parsed_variadic_positional is None:
+            return None
+        return self._parsed_variadic_positional.values
 
     def value_of(
         self, identifier: Identifier, /
@@ -124,3 +133,20 @@ class ParsedPositional[T](ParsedArgument):
 
     value: T | str
     """The converted parsed value."""
+
+
+@define(kw_only=True)
+class ParsedVariadicPositional[T](ParsedArgument):
+    """A parsed variadic positional."""
+
+    arg: VariadicPositional[Any, Any, T]
+    """The variadic positional that got parsed."""
+
+    raw_values: list[str] | None
+    """
+    The raw values that were supplied in the command-line or in the
+    {py:meth}`powercli.command.Command.parse_args` method.
+    """
+
+    values: Collection[T | str]
+    """The converted parsed values."""

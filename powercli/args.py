@@ -264,3 +264,39 @@ class Positional[FV, PV, T](Argument):
     def required(self) -> bool:
         """Whether the positional is required."""
         return self.default is None
+
+
+@define(kw_only=True)
+class VariadicPositional[FV, PV, T](Positional[FV, PV, T]):
+    # TODO: there can only be one vpos thus making an identifier obsolete
+    # TODO: defaults maybe
+    """A positional that accepts a variadic amount of values.
+
+    Positionals cannot be mixed with subcommands.
+    """
+
+    name: str
+    """The name of the positional."""
+
+    description: str | None = None
+    """A short one-sentence description of the positional."""
+
+    long_description: str | None = None
+    """A long description of the positional."""
+
+    into: Converter[T] | Converter[str] = str
+    """A function that convert each input value."""
+
+    min: int = 0
+    """The minimum amount of values required."""
+
+    def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
+        return f"<VariadicPositional #{self.identifier} ({self.name!r})>"
+
+    @property
+    def required(self) -> bool:
+        """Whether the positional is required."""
+        return self.min > 0

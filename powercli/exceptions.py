@@ -6,6 +6,7 @@ __all__ = [
     "ConversionError",
     "MissingValueError",
     "MissingPositionalError",
+    "TooFewPositionalsError",
     "MissingFlagError",
     "MissingDependencyError",
 ]
@@ -13,7 +14,7 @@ from typing import Any
 
 from attrs import define
 
-from .args import Argument, Flag, Positional
+from .args import Argument, Flag, Positional, VariadicPositional
 from .typedefs import Converter
 from .utils import _enumerate, _single_name_of_arg
 
@@ -61,6 +62,21 @@ class MissingPositionalError(Exception):
     def __str__(self) -> str:
         """Returns a string representation of the error."""
         return f"missing value for {self.positional}"
+
+
+@define
+class TooFewPositionalsError(Exception):
+    """The user did not provide enough positionals."""
+
+    positional: VariadicPositional[Any, Any, Any]
+    """The variadic positional that expects values."""
+
+    amount: int
+    """The amount of values that were provided."""
+
+    def __str__(self) -> str:
+        """Returns a string representation of the error."""
+        return f"missing values for {self.positional}; expected {self.positional.min}, got {self.amount}"
 
 
 @define
