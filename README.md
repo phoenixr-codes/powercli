@@ -70,6 +70,7 @@ from powercli import Flag
 cmd = Command()
 
 flag = Flag(
+    identifier="foo",
     short="f",
     values=[("PATH", Path)],
 )
@@ -78,6 +79,7 @@ cmd.add_arg(flag)
 # ... or use the shorthand ...
 
 cmd.flag(
+    identifier="foo",
     short="f",
     values=[("PATH", Path)]
 )
