@@ -55,6 +55,19 @@ cmd.pos(
 )
 ```
 
+## Register Subcommands
+
+```python
+# ...
+
+cmd.add_subcommand(
+    Command(
+        name="compile",
+        description="Compile source code",
+    )
+)
+```
+
 ## Parsing Arguments
 
 The {py:meth}`powercli.command.Command.parse_args` method parses arguments
