@@ -17,6 +17,11 @@ exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 # HTML CONFIG
 
 html_theme = "furo"
+html_theme_options = {
+    "source_repository": "https://github.com/phoenixr-codes/powercli/",
+    "source_branch": "stable",
+    "source_directory": "docs/",
+}
 html_logo = "../assets/logo.svg"
 html_favicon = "../assets/icon.svg"
 html_static_path = ["_static"]
