@@ -8,7 +8,9 @@
 
 ## Features
 
-- ✅ Simple & Advanced API
+- ✅ Simple API
+- ✅ Highly configurable
+- ✅ Flags, Positionals & Subcommands
 - ✅ Type Hints
 - ✅ Easy to test
 - ✅ Well documented
