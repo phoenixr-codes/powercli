@@ -29,7 +29,7 @@ uv add powercli-python
 
 ### Manual Installation
 
-Add `powercli`
+Add `powercli-python` as a dependency in your `pyproject.toml` file.
 
 ```toml
 dependencies = [
