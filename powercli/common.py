@@ -17,7 +17,7 @@ __all__ = [
 import sys
 from typing import Any, NoReturn, cast
 
-from ._help_utils import help_message
+from ._help_utils import _add_description, help_message
 from .args import Flag
 from .command import Command
 from .methods import Switch
@@ -187,15 +187,16 @@ class VersionFlag(Flag[Any, Any, None]):
         self.version = version
 
 
-def _list_message(cmd: Command[Any, Any]) -> str:
+def _list_message(cmd: Command[Any, Any], *, parents: list[str] | None = None) -> str:
     """Creates a string representation that lists every subcommand of `cmd`."""
     lines = []
+    prefix = "".join(map(lambda p: p + " ", parents or []))
     for subcommand in cmd._subcommands.values():
         names: list[str] = []
-        names.append(subcommand.name)
-        names.extend(subcommand.aliases)
-        names.extend(subcommand.hidden_aliases)
-        lines.append(", ".join(names))
+        names.append(f"{prefix}{subcommand.name}")
+        names.extend(map(lambda alias: f"{prefix}{alias}", subcommand.aliases))
+        lines.append(_add_description(", ".join(names), indent=2, description=subcommand.description, long_description=subcommand.long_description))
+        lines.extend(_list_message(subcommand, parents=[*(parents or []), subcommand.name]).splitlines())
     return "\n".join(lines)
 
 

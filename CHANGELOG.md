@@ -6,6 +6,11 @@
 
 - Support for positionals with variable amount of values (#1).
 
+### Changed
+
+- `list` command and `--list` flag now display all nested subcommands.
+- `list` command and `--list` flag now display commands with their description.
+
 ## [0.1.1] - 2025-06-18
 
 ### Changed
