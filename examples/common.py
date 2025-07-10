@@ -14,9 +14,24 @@ cmd.add_subcommand(common.HelpCommand())
 cmd.add_subcommand(common.VersionCommand("common example 1.0.0"))
 cmd.add_subcommand(common.ListCommand())
 
-foo: Command[Any, Any] = Command(name="foo", description="Does foo related stuff", add_common_subcommands=False, add_common_flags=True)
-bar: Command[Any, Any] = Command(name="bar", description="Does foobar related stuff", add_common_subcommands=False, add_common_flags=True)
-baz: Command[Any, Any] = Command(name="baz", description="Does foobarbaz related stuff", add_common_subcommands=False, add_common_flags=True)
+foo: Command[Any, Any] = Command(
+    name="foo",
+    description="Does foo related stuff",
+    add_common_subcommands=False,
+    add_common_flags=True,
+)
+bar: Command[Any, Any] = Command(
+    name="bar",
+    description="Does foobar related stuff",
+    add_common_subcommands=False,
+    add_common_flags=True,
+)
+baz: Command[Any, Any] = Command(
+    name="baz",
+    description="Does foobarbaz related stuff",
+    add_common_subcommands=False,
+    add_common_flags=True,
+)
 foo.add_subcommand(bar)
 bar.add_subcommand(baz)
 cmd.add_subcommand(foo)

@@ -195,8 +195,19 @@ def _list_message(cmd: Command[Any, Any], *, parents: list[str] | None = None) -
         names: list[str] = []
         names.append(f"{prefix}{subcommand.name}")
         names.extend(map(lambda alias: f"{prefix}{alias}", subcommand.aliases))
-        lines.append(_add_description(", ".join(names), indent=2, description=subcommand.description, long_description=subcommand.long_description))
-        lines.extend(_list_message(subcommand, parents=[*(parents or []), subcommand.name]).splitlines())
+        lines.append(
+            _add_description(
+                ", ".join(names),
+                indent=2,
+                description=subcommand.description,
+                long_description=subcommand.long_description,
+            )
+        )
+        lines.extend(
+            _list_message(
+                subcommand, parents=[*(parents or []), subcommand.name]
+            ).splitlines()
+        )
     return "\n".join(lines)
 
 

@@ -295,10 +295,13 @@ def test_variadic_positional_no_values() -> None:
     args = cmd.parse_args([])
     assert args.values_of_variadic_positional() == []
 
+
 def test_subcommand() -> None:
     cmd: Command[None, int]
     cmd = Command()
-    cmd.add_subcommand(Command(name="foo").flag(identifier="f", short="f", values=[("X", int)]))
+    cmd.add_subcommand(
+        Command(name="foo").flag(identifier="f", short="f", values=[("X", int)])
+    )
     args = cmd.parse_args(["foo", "-f", "12"])
     subargs = args.subcommand()
     assert subargs is not None

@@ -421,7 +421,9 @@ class Command[FV, PV]:
                             + ("" if similar is None else f"; {similar}")
                         )
                     logger.debug("detected subcommand")
-                    parsed_command._parsed_subcommand = subcommand.parse_args(list(parts))
+                    parsed_command._parsed_subcommand = subcommand.parse_args(
+                        list(parts)
+                    )
                     break
                 logger.debug("detected positional")
                 value = self._obtain_value(part, positional)
