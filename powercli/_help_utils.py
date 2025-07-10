@@ -137,7 +137,7 @@ def help_message(cmd: Command[Any, Any]) -> str:
 def usage(cmd: Command[Any, Any]) -> str:
     """Returns a "usage" line for a command."""
     return (
-        f"{BOLD:Usage:} {cmd.name}"
+        f"{BOLD:Usage:} {' '.join([*map(lambda p: p.name, cmd.parents()), cmd.name])}"
         f"{' [OPTIONS]' if cmd.has_flag() else ''}"
         f"{' [COMMAND]' if cmd.has_subcommand() else ''}"
         f"{' ' + positional_blocks(cmd) if positional_blocks(cmd) else ''}"
