@@ -35,4 +35,6 @@ main_cmd.flag(
 
 if __name__ == "__main__":
     args = main_cmd.parse_args()
+    if (subargs := args.subcommand()) is not None and subargs.command.name == "foo":
+        print("Foo!")
     print(args)

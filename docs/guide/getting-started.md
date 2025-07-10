@@ -68,7 +68,7 @@ cmd.add_subcommand(
 )
 ```
 
-## Parsing Arguments
+## Parsing Arguments and Subcommands
 
 The {py:meth}`powercli.command.Command.parse_args` method parses arguments
 passed to the program. Alternatively you can explicitly specify which arguments
@@ -89,6 +89,9 @@ if __name__ == "__main__":
     if args.is_present("foo"):
         print("FOO")
 
-    filepath = args.value_of("file")
-    print(filepath.read_text())
+    if (subargs := args.subcommand()) is not None and subargs.command.name == "compile":
+        print("Compiling...")
+    else:
+        filepath = args.value_of("file")
+        print(filepath.read_text())
 ```

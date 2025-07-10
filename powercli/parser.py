@@ -38,8 +38,8 @@ class ParsedCommand[FV, PV]:
     _parsed_variadic_positional: ParsedVariadicPositional[PV] | None
     """The variadic positional that has been parsed."""
 
-    _parsed_commands: list[ParsedCommand[FV, PV]]
-    """The subcommands that have been parsed."""
+    _parsed_subcommand: ParsedCommand[FV, PV] | None
+    """The subcommand that has been parsed if any."""
 
     def _all_args(self) -> list[ParsedFlag[FV] | ParsedPositional[PV]]:
         """Returns a list of all parsed arguments."""
@@ -75,6 +75,12 @@ class ParsedCommand[FV, PV]:
         if self._parsed_variadic_positional is None:
             return None
         return self._parsed_variadic_positional.values
+
+    def subcommand(self, /) -> ParsedCommand[FV, PV] | None:
+        """Returns the parsed subcommand if any."""
+        if self._parsed_subcommand is None:
+            return None
+        return self._parsed_subcommand
 
     def value_of(
         self, identifier: Identifier, /

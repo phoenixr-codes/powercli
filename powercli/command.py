@@ -321,14 +321,13 @@ class Command[FV, PV]:
 
         parsed_flags: list[parser.ParsedFlag[FV]] = []
         parsed_positionals: list[parser.ParsedPositional[PV]] = []
-        parsed_commands: list[parser.ParsedCommand[FV, PV]] = []
         parsed_command = parser.ParsedCommand(
             command=self,
             raw_args=args,
             parsed_flags=parsed_flags,
             parsed_positionals=parsed_positionals,
             parsed_variadic_positional=None,
-            parsed_commands=parsed_commands,
+            parsed_subcommand=None,
         )
 
         switches: dict[Identifier, bool] = {}
@@ -422,7 +421,7 @@ class Command[FV, PV]:
                             + ("" if similar is None else f"; {similar}")
                         )
                     logger.debug("detected subcommand")
-                    parsed_commands.append(subcommand.parse_args(list(parts)))
+                    parsed_command._parsed_subcommand = subcommand.parse_args(list(parts))
                     break
                 logger.debug("detected positional")
                 value = self._obtain_value(part, positional)

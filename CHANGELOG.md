@@ -8,6 +8,8 @@
 
 ### Changed
 
+- Better support for inspecting subcommand arguments (via
+  `powercli.parser.ParsedCommand.subcommand()`).
 - `list` command and `--list` flag now display all nested subcommands.
 - `list` command and `--list` flag now display commands with their description.
 
