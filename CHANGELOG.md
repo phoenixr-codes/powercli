@@ -10,6 +10,7 @@
 
 - Better support for inspecting subcommand arguments (via
   `powercli.parser.ParsedCommand.subcommand()`).
+- Usage section in help now includes parent commands names.
 - `list` command and `--list` flag now display all nested subcommands.
 - `list` command and `--list` flag now display commands with their description.
 
