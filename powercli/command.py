@@ -46,6 +46,8 @@ class Command[FV, PV]:
 
     * `long_description` - A concise description of the command.
 
+    * `epilog` - Additional text displayed at the bottom.
+
     * `prefix_short` - The prefix used to specify flags by their short name.
 
       Most command-line programs use dashes (`-`) for flags. This is the default
