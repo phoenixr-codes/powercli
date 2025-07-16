@@ -295,6 +295,23 @@ def test_variadic_positional_no_values() -> None:
     args = cmd.parse_args([])
     assert args.values_of_variadic_positional() == []
 
+def test_variadic_positional_with_pos_and_flag() -> None:
+    cmd: Command[int, str]
+
+    cmd = Command()
+    cmd.flag(identifier="f", short="f", values=[("X", int)])
+    cmd.flag(identifier="g", short="g", values=[("X", int)])
+    cmd.pos(identifier="a", name="A")
+    cmd.pos(identifier="b", name="B")
+    cmd.vpos(identifier="rest", name="REST", min=0)
+
+    args = cmd.parse_args(["-f", "1", "-g", "2", "one", "two", "rest1", "rest2", "rest3"])
+    assert args.value_of_flag("f") == [1]
+    assert args.value_of_flag("g") == [2]
+    assert args.value_of_positional("a") == "one"
+    assert args.value_of_positional("b") == "two"
+    assert args.values_of_variadic_positional() == ["rest1", "rest2", "rest3"]
+
 
 def test_subcommand() -> None:
     cmd: Command[None, int]

@@ -351,6 +351,8 @@ class Command[FV, PV]:
         variadic_pos_values: list[tuple[str, PV | str]] = []
         done_parsing_variadics = False
 
+        # TODO: require at least `min` args for variadic positional
+
         parts = ArgIterator(deque(args))
         for part in parts:
             logger.debug(f"processing {part!r}")
