@@ -59,9 +59,6 @@ powerdoc = "powerdoc.__init__:run"
 [tool.poetry]
 packages = [{ include = "powercli" }, { include = "powerdoc" }]
 
-[tool.poetry.group.docs.dependencies]
-pdoc = "^15.0.1"
-
 [tool.codespell]
 skip = "*.svg,./htmlcov,./docs/_build,pyproject.toml,poetry.lock"
 
