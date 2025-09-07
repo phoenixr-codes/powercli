@@ -14,6 +14,7 @@ def format(session: nox.Session) -> None:
 @nox.session
 def coverage(session: nox.Session) -> None:
     session.install(".[dev]")
+    session.run("coverage", "run", "-m", "pytest", "tests")
     session.run("coverage", "report", "-m")
     session.run("docstr-coverage", "--skip-private", "--skip-magic", "powercli")
 
