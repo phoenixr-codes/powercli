@@ -265,6 +265,11 @@ def test_variadic_positional_min() -> None:
     args = cmd.parse_args(["1", "2", "3", "4"])
     assert args.values_of_variadic_positional() == [1, 2, 3, 4]
 
+    cmd = Command()
+    cmd.vpos(identifier="p", name="POS", into=int, min=3)
+    with pytest.raises(exceptions.TooFewPositionalsError):
+        args = cmd.parse_args(["1", "2"])
+
 
 def test_variadic_positional_too_few_values() -> None:
     cmd: Command[None, int]
