@@ -1,5 +1,5 @@
-from enum import auto, StrEnum
 import sys
+from enum import StrEnum, auto
 from typing import Any
 
 from loguru import logger
@@ -11,9 +11,11 @@ from powercli.utils import member_of
 logger.enable("powercli.command")
 logger.add(sys.stdout, level="TRACE")
 
+
 class Pet(StrEnum):
     DOG = auto()
     CAT = auto()
+
 
 cmd: Command[Any, Any] = Command(add_common_flags=True)
 cmd.pos(identifier="foo", name="FOO", into=member_of(Pet))

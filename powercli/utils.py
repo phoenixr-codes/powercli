@@ -4,9 +4,9 @@ from __future__ import annotations
 
 __all__ = ["static", "one_of", "ArgIterator"]
 import difflib
-from enum import StrEnum
 from collections import deque
-from collections.abc import Callable, Iterable, Iterator, Sequence, Mapping
+from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+from enum import StrEnum
 from typing import TYPE_CHECKING, Any
 
 from attrs import define
@@ -50,6 +50,7 @@ def member_of(enum: type[StrEnum], *, ignore_case: bool = True) -> Converter[str
       values.
     * `ignore_case` - Ignore case when finding enum member.
     """
+
     def to_enum_member(raw: str) -> str:
         for member in enum:
             if ignore_case and member.casefold() == raw.casefold():
@@ -57,7 +58,9 @@ def member_of(enum: type[StrEnum], *, ignore_case: bool = True) -> Converter[str
             elif member == raw:
                 return member
         raise ValueError(f"{raw!r} is not a possible value for {enum!r}")
+
     return to_enum_member
+
 
 def one_of[FV, PV](
     *flags: Flag[FV, PV, FV],
