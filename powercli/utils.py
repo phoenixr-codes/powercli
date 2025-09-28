@@ -4,15 +4,16 @@ from __future__ import annotations
 
 __all__ = ["static", "one_of", "ArgIterator"]
 import difflib
+from enum import StrEnum
 from collections import deque
-from collections.abc import Callable, Iterable, Iterator, Sequence
+from collections.abc import Callable, Iterable, Iterator, Sequence, Mapping
 from typing import TYPE_CHECKING, Any
 
 from attrs import define
 
 if TYPE_CHECKING:
     from .args import Argument, Flag
-    from .typedefs import Context, WithContext
+    from .typedefs import Context, Converter, WithContext
 
 
 def static[T](value: T, /) -> Callable[..., T]:
@@ -38,6 +39,25 @@ def static[T](value: T, /) -> Callable[..., T]:
 
     return inner
 
+
+def member_of(enum: type[StrEnum], *, ignore_case: bool = True) -> Converter[str]:
+    """
+    Creates a converter for an enum type.
+
+    # Parameters
+
+    * `enum` - The enum type with the members' values beeing the possible
+      values.
+    * `ignore_case` - Ignore case when finding enum member.
+    """
+    def to_enum_member(raw: str) -> str:
+        for member in enum:
+            if ignore_case and member.casefold() == raw.casefold():
+                return member
+            elif member == raw:
+                return member
+        raise ValueError(f"{raw!r} is not a possible value for {enum!r}")
+    return to_enum_member
 
 def one_of[FV, PV](
     *flags: Flag[FV, PV, FV],
