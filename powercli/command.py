@@ -349,6 +349,10 @@ class Command[FV, PV]:
 
         position = 0
         variadic_pos_values: list[tuple[str, PV | str]] = []
+
+        # When we collect some values for the variadic positional followed by one
+        # or more flags we are done parsing variadics. It is not possible to
+        # provide any more values for the variadic positional.
         done_parsing_variadics = False
 
         # TODO: require at least `min` args for variadic positional
@@ -357,6 +361,7 @@ class Command[FV, PV]:
         for part in parts:
             logger.debug(f"processing {part!r}")
             if self.has_prefix() and (self._is_long(part) or self._is_short(part)):
+                done_parsing_variadics = len(variadic_pos_values) > 0
                 names: list[str]
                 if self._is_long(part):
                     logger.debug("detected long prefix")
@@ -444,7 +449,6 @@ class Command[FV, PV]:
                     )
                 )
                 position += 1
-            done_parsing_variadics = True
 
         if (
             self._variadic_positional is not None
