@@ -164,7 +164,8 @@ class Flag[FV, PV, T](Argument):
     """Whether the flag is deprecated.
 
     The flag should not be considered deprecated when `required` evaluates
-    `True`.
+    `True`. When the user makes use of a flag that is considered deprecated
+    a {py:obj}`DeprecationWarning` will be emitted.
 
     # Examples
 
