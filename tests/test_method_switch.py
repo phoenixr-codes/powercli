@@ -1,6 +1,6 @@
 from powercli import methods
 from powercli.command import Command
-from powercli.utils import static
+from powercli.static import Static
 
 
 def test_presence_default() -> None:
@@ -19,7 +19,7 @@ def test_custom() -> None:
     cmd.flag(
         identifier="f",
         short="f",
-        method=methods.Switch(on_presence=static(1), on_absence=static(0)),
+        method=methods.Switch(on_presence=Static(1), on_absence=Static(0)),
     )
 
     args = cmd.parse_args(["-f"])

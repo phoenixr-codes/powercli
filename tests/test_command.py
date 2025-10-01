@@ -7,8 +7,9 @@ from powercli import exceptions
 from powercli.args import Flag, Positional
 from powercli.command import Command
 from powercli.deprecation import Deprecation
+from powercli.static import Static
 from powercli.typedefs import Context
-from powercli.utils import one_of, static
+from powercli.utils import one_of
 
 
 def test_prefix() -> None:
@@ -138,7 +139,7 @@ def test_one_flag_of_multiple() -> None:
             Flag(identifier="f", short="f"),
             Flag(identifier="g", short="g"),
             Flag(identifier="h", short="h"),
-            required=static(True),
+            required=Static(True),
         )
     )
     with pytest.raises(RuntimeError):
@@ -150,7 +151,7 @@ def test_one_flag_of_multiple() -> None:
             Flag(identifier="f", short="f"),
             Flag(identifier="g", short="g"),
             Flag(identifier="h", short="h"),
-            required=static(True),
+            required=Static(True),
         )
     )
     args = cmd.parse_args(["-g"])
@@ -207,14 +208,14 @@ def test_flag_with_default() -> None:
     cmd: Command[int, None] = Command(
         add_common_subcommands=False, add_common_flags=False
     )
-    cmd.flag(identifier="f", short="f", values=[("X", int)], default=static([42]))
+    cmd.flag(identifier="f", short="f", values=[("X", int)], default=Static([42]))
     args = cmd.parse_args([])
     assert args.value_of("f") == [42]
 
 
 def test_positional_with_default() -> None:
     cmd: Command[None, int] = Command()
-    cmd.pos(identifier="p", name="POS", into=int, default=static(42))
+    cmd.pos(identifier="p", name="POS", into=int, default=Static(42))
     args = cmd.parse_args([])
     assert args.value_of_positional("p") == 42
 
@@ -337,7 +338,7 @@ def test_subcommand() -> None:
     assert subargs.value_of_flag("f") == [12]
 
 
-def test_deprecation_with_bool() -> None:
+def test_flag_deprecation_with_bool() -> None:
     cmd: Command[int, None]
     cmd = Command()
     cmd.flag(identifier="f", short="f", values=[("INT", int)])
@@ -354,7 +355,7 @@ def test_deprecation_with_bool() -> None:
     assert args.value_of_flag("g") == [2]
 
 
-def test_deprecation_with_object() -> None:
+def test_flag_deprecation_with_object() -> None:
     deprecation = Deprecation("use -h instead when -f is 1", since="1.0")
 
     # only for type checking
@@ -376,3 +377,11 @@ def test_deprecation_with_object() -> None:
         match=f"{re.escape(deprecation.since)}: {re.escape(deprecation.message)}"
     ):
         cmd.parse_args(["-f", "1", "-g", "2"])
+
+
+def test_command_deprecation() -> None:
+    cmd: Command[None, None]
+    cmd = Command()
+    cmd.add_subcommand(Command(name="foo", deprecation=True))
+    with pytest.deprecated_call():
+        cmd.parse_args(["foo"])

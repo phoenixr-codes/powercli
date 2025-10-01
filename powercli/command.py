@@ -86,6 +86,8 @@ class Command[FV, PV]:
 
     * `category` - An optional category used for grouping commands.
 
+    * `deprecation` - Whether this command is deprecated.
+
     * `file` - The file used for commands or arguments that display text.
 
     * `add_common_flags` - Adds `h`, `help`, `list` and `version` flags.
@@ -121,6 +123,9 @@ class Command[FV, PV]:
 
     category: Category | None = None
     """The optional category of this command."""
+
+    deprecation: Deprecation | bool | None = None
+    """Whether this command is deprecated."""
 
     file: typing.TextIO = Factory(lambda: sys.stdout)
     """The stream this command writes text to."""
@@ -335,6 +340,15 @@ class Command[FV, PV]:
         )
 
         switches: dict[Identifier, bool] = {}
+
+        if self.deprecation:
+            description = f"command {self} is deprecated"
+            if isinstance(self.deprecation, Deprecation):
+                if self.deprecation.since is not None:
+                    description += f" since {self.deprecation.since}"
+                if self.deprecation.message is not None:
+                    description += f": {self.deprecation.message}"
+            warnings.warn(description, DeprecationWarning)
 
         # initially fill methods with certain methods
         for f in self._flags:

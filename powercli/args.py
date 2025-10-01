@@ -13,8 +13,9 @@ from attrs import Factory, define, field
 from . import methods
 from .category import Category
 from .deprecation import Deprecation
+from .static import Static
 from .typedefs import Converter, Identifier, WithContext
-from .utils import _not_unique, static
+from .utils import _not_unique
 
 
 @define(kw_only=True)
@@ -140,13 +141,12 @@ class Flag[FV, PV, T](Argument):
     # Examples
 
     ```python
-    from powercli import Flag
-    from powercli.utils import static
+    from powercli import Flag, Static
 
     Flag(
         # ...
         values=[("X", float), ("Y", int)],
-        default=static([1.5, 42]),
+        default=Static([1.5, 42]),
     )
     ```
     """
@@ -154,13 +154,13 @@ class Flag[FV, PV, T](Argument):
     method: methods.Method = Factory(lambda: methods.Normal())
     """The method of the flag that influences the parsing behavior."""
 
-    required: WithContext[FV, PV, bool | str] = static(False)
+    required: WithContext[FV, PV, bool | str] = Static(False)
     """Whether the flag is required."""
 
-    allowed: WithContext[FV, PV, bool | str] = static(True)
+    allowed: WithContext[FV, PV, bool | str] = Static(True)
     """Whether the flag is allowed."""
 
-    deprecation: WithContext[FV, PV, bool | Deprecation | None] = static(False)
+    deprecation: WithContext[FV, PV, bool | Deprecation | None] = Static(False)
     """Whether the flag is deprecated.
 
     The flag should not be considered deprecated when `required` evaluates

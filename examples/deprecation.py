@@ -3,7 +3,7 @@ import sys
 from loguru import logger
 from rich import print
 
-from powercli import Command
+from powercli import Command, Static
 from powercli.deprecation import Deprecation
 from powercli.typedefs import Context
 
@@ -19,10 +19,11 @@ def f_deprecation(ctx: Context[int, None]) -> Deprecation | None:
 
 cmd: Command[int, None]
 cmd = Command()
-cmd.flag(identifier="f", short="f", values=[("INT", int)])
+cmd.flag(identifier="f", short="f", values=[("INT", int)], required=Static(True))
 cmd.flag(
     identifier="g", short="g", values=[("INT", int)], deprecation=f_deprecation
 )
+cmd.flag(identifier="x", short="x", description="Does something", deprecation=Static(True))
 
 if __name__ == "__main__":
     args = cmd.parse_args()

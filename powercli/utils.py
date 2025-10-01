@@ -8,18 +8,25 @@ from collections import deque
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from enum import StrEnum
 from typing import TYPE_CHECKING, Any
+from warnings import warn
 
 from attrs import define
+
+from .static import Static
 
 if TYPE_CHECKING:
     from .args import Argument, Flag
     from .typedefs import Context, Converter, WithContext
 
 
-def static[T](value: T, /) -> Callable[..., T]:
+def static[T](value: T, /) -> Static[T]:
     """
     Returns a callable which depends the provided value ignoring the supplied
     arguments.
+
+    ```{deprecated} 0.2.0
+    Deprecated in favor of {py:obj}`powercli.static.Static`.
+    ```
 
     # Examples
 
@@ -32,12 +39,8 @@ def static[T](value: T, /) -> Callable[..., T]:
     )
     ```
     """
-
-    def inner(*args: Any, **kwargs: Any) -> T:
-        """Returns a wrapped value."""
-        return value
-
-    return inner
+    warn("`utils.static` is deprecated; use `static.Static` instead", DeprecationWarning)
+    return Static(value)
 
 
 def member_of(enum: type[StrEnum], *, ignore_case: bool = True) -> Converter[str]:
@@ -64,7 +67,7 @@ def member_of(enum: type[StrEnum], *, ignore_case: bool = True) -> Converter[str
 
 def one_of[FV, PV](
     *flags: Flag[FV, PV, FV],
-    required: WithContext[FV, PV, bool] = static(False),
+    required: WithContext[FV, PV, bool] = Static(False),
 ) -> Iterable[Flag[FV, PV, FV]]:
     """
     Modifies each flag to only be allowed when all other flags are absent.

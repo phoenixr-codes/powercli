@@ -21,7 +21,7 @@ classifiers = [
   "Typing :: Typed",
 ]
 dependencies = [
-  "adorable~=0.1.5",
+  "adorable~=0.1.6",
   "attrs>=23.1.0",
   "loguru>=0.7.2",
   "wraptext==1.0.1",

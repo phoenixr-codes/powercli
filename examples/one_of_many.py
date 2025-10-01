@@ -3,8 +3,8 @@ import sys
 from loguru import logger
 from rich import print
 
-from powercli import Command, Flag
-from powercli.utils import one_of, static
+from powercli import Command, Flag, Static
+from powercli.utils import one_of
 
 logger.enable("powercli.command")
 logger.add(sys.stdout, level="TRACE")
@@ -22,7 +22,7 @@ cmd.add_args(
         Flag(identifier="i", short="i"),
         Flag(identifier="j", short="j"),
         Flag(identifier="k", short="k"),
-        required=static(True),
+        required=Static(True),
     )
 )
 

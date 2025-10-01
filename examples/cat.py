@@ -8,16 +8,16 @@ from rich.syntax import Syntax
 
 from powercli import Command
 from powercli.methods import Repeat, Switch
-from powercli.utils import static
+from powercli.static import Static
 
 cmd: Command[Any, Any] = Command(name="cat")
-cmd.pos(identifier="file", name="FILE", into=Path, default=static(None))
+cmd.pos(identifier="file", name="FILE", into=Path, default=Static(None))
 cmd.flag(
     identifier="theme",
     long="theme",
     description="Color theme, aka Pygments style (default: github-dark)",
     values=[("THEME", str)],
-    default=static(["github-dark"]),
+    default=Static(["github-dark"]),
 )
 cmd.flag(
     identifier="line-numbers",
@@ -38,7 +38,7 @@ cmd.flag(
     long="padding",
     description="Apply padding",
     values=[("PADDING", int)],
-    default=static(0),
+    default=Static(0),
 )
 
 if __name__ == "__main__":

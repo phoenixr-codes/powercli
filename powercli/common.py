@@ -21,7 +21,7 @@ from ._help_utils import _add_description, help_message
 from .args import Flag
 from .command import Command
 from .methods import Switch
-from .utils import static
+from .static import Static
 
 
 class HelpCommand[FV, PV](Command[FV, PV]):
@@ -57,7 +57,7 @@ class HelpCommand[FV, PV](Command[FV, PV]):
             name="COMMAND",
             description="The name of the subcommand",
             into=self._subcommand_of_parent,
-            default=static(None),
+            default=Static(None),
         )
 
         self.status = status
@@ -121,7 +121,7 @@ class HelpFlag(Flag[Any, Any, None]):
                 on_presence=lambda ctx: _print_and_exit(
                     help_message(ctx.command), status=status, file=ctx.command.file
                 ),
-                on_absence=static(None),
+                on_absence=Static(None),
             ),
             **kwargs,
         )
@@ -180,7 +180,7 @@ class VersionFlag(Flag[Any, Any, None]):
             description=description,
             method=Switch[Any, Any, NoReturn, None](
                 on_presence=lambda ctx: _print_and_exit(version, file=ctx.command.file),
-                on_absence=static(None),
+                on_absence=Static(None),
             ),
             **kwargs,
         )
@@ -252,7 +252,7 @@ class ListFlag(Flag[Any, Any, None]):
                 on_presence=lambda ctx: _print_and_exit(
                     _list_message(ctx.command), file=ctx.command.file
                 ),
-                on_absence=static(None),
+                on_absence=Static(None),
             ),
             **kwargs,
         )

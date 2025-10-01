@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING, Any
 
 from attrs import define
 
+from .static import Static
 from .typedefs import Context, WithContext
-from .utils import static
 
 if TYPE_CHECKING:
     from .args import Flag
@@ -49,7 +49,7 @@ class Count[FV, PV](Method):
     ```python
     from powercli.args import Flag
     from powercli.methods import Count
-    from powercli.utils import static
+    from powercli.static import Static
 
     Flag(
         short="v",
@@ -57,7 +57,7 @@ class Count[FV, PV](Method):
         description="Enables verbosity up to 4 different levels"
         method=Count(
             lambda _, amount: amount in range(0, 5),  # restrict range
-            default=static(2)  # returned when absent
+            default=Static(2)  # returned when absent
         )
     )
     ```
@@ -68,8 +68,8 @@ class Count[FV, PV](Method):
     - The flag does not have any default values.
     """
 
-    validate_amount: Callable[[Context[FV, PV], int], bool | str] = static(True)
-    default: WithContext[FV, PV, int] | None = static(0)
+    validate_amount: Callable[[Context[FV, PV], int], bool | str] = Static(True)
+    default: WithContext[FV, PV, int] | None = Static(0)
 
     @staticmethod
     def _validate_flag(flag: Flag[Any, Any, Any]) -> None:
@@ -112,7 +112,7 @@ class Repeat[FV, PV](Method):
     - The flag does not take any default values.
     """
 
-    validate_amount: Callable[[Context[FV, PV], int], bool | str] = static(True)
+    validate_amount: Callable[[Context[FV, PV], int], bool | str] = Static(True)
     """A function that validates the amount of repetitions."""
 
     @staticmethod
@@ -176,6 +176,6 @@ class Switch[FV, PV, P, A](Method):
     def boolean() -> Switch[Any, Any, bool, bool]:
         """A constructor for a commonly used switch that evaluates `True` on presence and `False` on absence."""
         return Switch(
-            on_presence=static(True),
-            on_absence=static(False),
+            on_presence=Static(True),
+            on_absence=Static(False),
         )

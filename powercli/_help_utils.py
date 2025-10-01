@@ -17,6 +17,7 @@ __all__ = [
 ]
 
 import builtins
+from collections.abc import Collection
 import shutil
 from functools import partial
 from hashlib import blake2s
@@ -25,6 +26,8 @@ from typing import TYPE_CHECKING, Any
 
 import wraptext
 from adorable import BOLD, color  # type: ignore
+
+from .static import Static
 
 if TYPE_CHECKING:
     from .args import Flag
@@ -79,9 +82,26 @@ def _indent_text(text: str, indent: str, indent_initial: bool) -> str:
 
 
 def _add_description(
-    lhs: str, indent: int, description: str | None, long_description: str | None
+    lhs: str,
+    *,
+    indent: int,
+    description: str | None,
+    long_description: str | None,
+    tags: Collection[str] | None = None,
 ) -> str:
-    """Adds the short and long description of something by indenting it appropriately."""
+    """
+    Adds the short and long description of something by indenting it
+    appropriately.
+
+    # Parameters
+
+    * `lhs` - The text on the left hand side (e.g. flag name with prefix).
+    * `indent` - The amount of indentation to indent text on the right side
+      where it spans over the first line.
+    * `description` - The (short) description.
+    * `long_description` - The long description.
+    * `tags` - Additional tags to append to the right hand side.
+    """
     text = " " * indent + lhs
     full_description = ""
     if description is not None:
@@ -91,6 +111,10 @@ def _add_description(
             full_description += f"\n\n{long_description}"
         else:
             full_description = long_description
+    if tags is not None and len(tags) > 0:
+        if full_description:
+            full_description += " "
+        full_description += " ".join(tags)
     if full_description:
         space_between = DESCRIPTION_INDENTATION - len(text)
         if space_between <= 0:
@@ -176,11 +200,18 @@ def pretty_flag(cmd: Command[Any, Any], flag: Flag[Any, Any, Any]) -> str:
         parts.extend(
             [f"{clr:{cmd.prefix_long + name}}" for name in flag.visible_long_names()]
         )
+    tags = []
+    tag_text_color = color.Color3bit.from_hex(0x000)
+    if isinstance(flag.deprecation, Static) and flag.deprecation.value:
+        tags.append(f"{tag_text_color.on(color.Color3bit.from_name("red")):(deprecated)}")
+    if isinstance(flag.required, Static) and (isinstance(flag.required.value, str) or flag.required.value):
+        tags.append(f"{tag_text_color.on(color.Color3bit(ansi=4)):(required)}")
     return _add_description(
         f"{', '.join(parts)} {values(flag)}",
         indent=2,
         description=flag.description,
         long_description=flag.long_description,
+        tags=tags,
     )
 
 

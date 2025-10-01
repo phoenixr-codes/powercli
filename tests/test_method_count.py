@@ -6,8 +6,8 @@ from powercli import methods
 from powercli.args import Flag
 from powercli.command import Command
 from powercli.exceptions import MissingDependencyError
+from powercli.static import Static
 from powercli.typedefs import Context, Identifier
-from powercli.utils import static
 
 FV = TypeVar("FV")
 PV = TypeVar("PV")
@@ -18,7 +18,7 @@ def test_values_and_default() -> None:
         Flag(short="f", method=methods.Count(), values=[("X", str)])
 
     with pytest.raises(RuntimeError):
-        Flag(short="f", method=methods.Count(), default=static(["foo"]))
+        Flag(short="f", method=methods.Count(), default=Static(["foo"]))
 
 
 def test_counting() -> None:
