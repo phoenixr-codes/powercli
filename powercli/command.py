@@ -5,11 +5,11 @@ from __future__ import annotations
 __all__ = ["Command"]
 import sys
 import typing
+import warnings
 from collections import deque
 from collections.abc import Generator, Iterable
 from itertools import chain
 from typing import Any
-import warnings
 
 from attrs import Factory, define, field
 from loguru import logger

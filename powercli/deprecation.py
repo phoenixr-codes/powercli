@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from attrs import define, field
 
+
 @define
 class Deprecation:
     message: str | None = None
