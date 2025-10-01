@@ -1,15 +1,15 @@
 # Create mutually exclusive flags
 
 ```python
-from powercli import Command
-from powercli.utils import one_of, static
+from powercli import Command, Static
+from powercli.utils import one_of
 
 cmd = Command()
 cmd.add_args(
     one_of(
         Flag(identifier="foo", long="foo"),
         Flag(identifier="bar", long="bar"),
-        required=static(True),  # one of `foo` or `bar` **must** be present
+        required=Static(True),  # one of `foo` or `bar` **must** be present
     )
 )
 ```

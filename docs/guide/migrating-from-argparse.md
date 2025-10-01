@@ -75,7 +75,7 @@ cmd.add_args(
         Flag(long="moo"),
         Flag(long="meow"),
     ),
-    required=static(True)
+    required=Static(True)
 )
 ```
 

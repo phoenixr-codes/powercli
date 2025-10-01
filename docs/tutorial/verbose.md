@@ -8,9 +8,8 @@ level of verbosity. For example using `-v` would only output warnings whereas
 ```python
 import logging
 
-from powercli import Command
+from powercli import Command, Static
 from powercli.methods import Count
-from powercli.utils import static
 
 
 cmd = Command()
@@ -19,7 +18,7 @@ cmd.flag(
     short="v",
     long="verbose",
     description="Enables verbosity up to 5 different levels",
-    method=Count(lambda _, amount: amount in range(1, 6), default=static(2)),
+    method=Count(lambda _, amount: amount in range(1, 6), default=Static(2)),
 )
 
 if __name__ == "__main__":
