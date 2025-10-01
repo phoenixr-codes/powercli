@@ -9,6 +9,7 @@ from collections import deque
 from collections.abc import Generator, Iterable
 from itertools import chain
 from typing import Any
+import warnings
 
 from attrs import Factory, define, field
 from loguru import logger
@@ -17,6 +18,7 @@ from . import exceptions, methods, parser
 from .args import Argument, Flag, Positional, VariadicPositional
 from .category import Category
 from .dependency import Resolver
+from .deprecation import Deprecation
 from .typedefs import Converter, Identifier
 from .utils import ArgIterator, _did_you_mean, _single_name_of_arg
 
@@ -610,13 +612,24 @@ class Command[FV, PV]:
 
         for parsed_flag in parsed_flags:
             arg = parsed_flag.arg
+
             allowed = arg.allowed(parsed_command)
-            message = f"argument {arg} is not allowed"
-            if isinstance(allowed, str):
-                message += f": {allowed}"
-            elif allowed:
-                continue
-            raise RuntimeError(message)
+            deprecated = arg.deprecation(parsed_command)
+
+            if allowed is False or isinstance(allowed, str):
+                message = f"argument {arg} is not allowed"
+                if isinstance(allowed, str):
+                    message += f": {allowed}"
+                raise RuntimeError(message)
+
+            if deprecated:
+                message = f"argument {arg} is deprecated"
+                if isinstance(deprecated, Deprecation):
+                    if deprecated.since is not None:
+                        message += f" since {deprecated.since}"
+                    if deprecated.message is not None:
+                        message += f": {deprecated.message}"
+                warnings.warn(message, DeprecationWarning)
 
         return parsed_command
 

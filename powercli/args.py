@@ -12,6 +12,7 @@ from attrs import Factory, define, field
 
 from . import methods
 from .category import Category
+from .deprecation import Deprecation
 from .typedefs import Converter, Identifier, WithContext
 from .utils import _not_unique, static
 
@@ -139,12 +140,13 @@ class Flag[FV, PV, T](Argument):
     # Examples
 
     ```python
-    from  powercli import Flag
+    from powercli import Flag
+    from powercli.utils import static
 
     Flag(
         # ...
         values=[("X", float), ("Y", int)],
-        default=[1.5, 42],
+        default=static([1.5, 42]),
     )
     ```
     """
@@ -157,6 +159,25 @@ class Flag[FV, PV, T](Argument):
 
     allowed: WithContext[FV, PV, bool | str] = static(True)
     """Whether the flag is allowed."""
+
+    deprecation: WithContext[FV, PV, bool | Deprecation | None] = static(False)
+    """Whether the flag is deprecated.
+
+    The flag should not be considered deprecated when `required` evaluates
+    `True`.
+
+    # Examples
+
+    ```python
+    from powercli import Flag
+
+    Flag(
+      identifier="f",
+      # ...
+      deprecation=lambda ctx: Deprecation("using flag f when flag g is 1 is deprecated") if ctx.value_of("g") == [1] else None
+    )
+    ```
+    """
 
     category: Category | None = None
     """The optional category of this flag."""
