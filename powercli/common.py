@@ -15,8 +15,9 @@ __all__ = [
 
 
 import sys
-from typing import Any, NoReturn, cast
+from typing import Any, Never, cast
 
+from . import parser
 from ._help_utils import _add_description, help_message
 from .args import Flag
 from .command import Command
@@ -24,7 +25,7 @@ from .methods import Switch
 from .static import Static
 
 
-class HelpCommand[FV, PV](Command[FV, PV]):
+class HelpCommand(Command[Never, Never]):
     """A help command."""
 
     def __init__(
@@ -62,7 +63,7 @@ class HelpCommand[FV, PV](Command[FV, PV]):
 
         self.status = status
 
-    def _subcommand_of_parent(self, name: str) -> Command[FV, PV]:
+    def _subcommand_of_parent(self, name: str) -> Command[Never, Never]:
         """Returns the subcommand named `name` of the parent command."""
         assert self.parent is not None, "help command must be subcommand"
         for cmd in self.parent._subcommands.values():
@@ -70,7 +71,7 @@ class HelpCommand[FV, PV](Command[FV, PV]):
                 return cmd
         raise RuntimeError(f"no command name {name!r}")
 
-    def parse_args(self, args: list[str] | None = None) -> NoReturn:
+    def parse_args(self, args: list[str] | None = None) -> parser.ParsedCommand[Never, Never]:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print a help message and exit.
@@ -84,12 +85,32 @@ class HelpCommand[FV, PV](Command[FV, PV]):
         target = target or self.parent
         assert target is not None
         _print_and_exit(help_message(target), status=self.status, file=self.file)
+        return _dummy_parsed_command(self)
 
 
-def _print_and_exit(*args: Any, status: int = 0, **kwargs: Any) -> NoReturn:
-    """Prints text and exits with `status`."""
+def _print_and_exit(*args: Any, status: int = 0, **kwargs: Any) -> None:
+    """Prints text and exits with `status`.
+
+    This function does not exit if running interactively.
+    """
     print(*args, **kwargs)
-    sys.exit(status)
+    if not _interactive():
+        sys.exit(status)
+
+def _dummy_parsed_command(command: Command[Any, Any]) -> parser.ParsedCommand[Never, Never]:
+    """Returns a dummy instance of a parsed command.
+
+    This is only used for commands that usually exit the program but not when
+    running that command in an interactive session (e.g. Python REPL).
+    """
+    return parser.ParsedCommand(
+        parsed_subcommand=None,
+        parsed_positionals=[],
+        parsed_variadic_positional=None,
+        parsed_flags=[],
+        raw_args=[],
+        command=command
+    )
 
 
 class HelpFlag(Flag[Any, Any, None]):
@@ -117,7 +138,7 @@ class HelpFlag(Flag[Any, Any, None]):
             long=long,
             short_hidden_aliases=short_hidden_aliases,
             description=description,
-            method=Switch[Any, Any, NoReturn, None](
+            method=Switch[Any, Any, None, None](
                 on_presence=lambda ctx: _print_and_exit(
                     help_message(ctx.command), status=status, file=ctx.command.file
                 ),
@@ -127,7 +148,7 @@ class HelpFlag(Flag[Any, Any, None]):
         )
 
 
-class VersionCommand(Command[Any, Any]):
+class VersionCommand(Command[Never, Never]):
     """A version command."""
 
     def __init__(
@@ -148,13 +169,14 @@ class VersionCommand(Command[Any, Any]):
         super().__init__(name=name, description=description, **kwargs)
         self.version = version
 
-    def parse_args(self, args: list[str] | None = None) -> NoReturn:
+    def parse_args(self, args: list[str] | None = None) -> parser.ParsedCommand[Never, Never]:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print the version and exit.
         """
         _pargs = super().parse_args(args)
         _print_and_exit(self.version, file=self.file)
+        return _dummy_parsed_command(self)
 
 
 class VersionFlag(Flag[Any, Any, None]):
@@ -178,7 +200,7 @@ class VersionFlag(Flag[Any, Any, None]):
         super().__init__(
             long=long,
             description=description,
-            method=Switch[Any, Any, NoReturn, None](
+            method=Switch[Any, Any, None, None](
                 on_presence=lambda ctx: _print_and_exit(version, file=ctx.command.file),
                 on_absence=Static(None),
             ),
@@ -186,9 +208,9 @@ class VersionFlag(Flag[Any, Any, None]):
         )
         self.version = version
 
-# def _interactive() -> bool:
-#     """Returns whether the user is running in interactive mode."""
-#     return hasattr(sys, "ps1")
+def _interactive() -> bool:
+    """Returns whether the user is running in interactive mode."""
+    return hasattr(sys, "ps1")
 
 def _list_message(cmd: Command[Any, Any], *, parents: list[str] | None = None) -> str:
     """Creates a string representation that lists every subcommand of `cmd`."""
@@ -214,7 +236,7 @@ def _list_message(cmd: Command[Any, Any], *, parents: list[str] | None = None) -
     return "\n".join(lines)
 
 
-class ListCommand(Command[Any, Any]):
+class ListCommand(Command[Never, Never]):
     """A list command."""
 
     def __init__(
@@ -226,7 +248,7 @@ class ListCommand(Command[Any, Any]):
         """Initializes the list command."""
         super().__init__(name=name, description=description, **kwargs)
 
-    def parse_args(self, args: list[str] | None = None) -> NoReturn:
+    def parse_args(self, args: list[str] | None = None) -> parser.ParsedCommand[Never, Never]:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print a list of subcommands and exit.
@@ -234,6 +256,7 @@ class ListCommand(Command[Any, Any]):
         _pargs = super().parse_args(args)
         assert self.parent is not None
         _print_and_exit(_list_message(self.parent), file=self.file)
+        return _dummy_parsed_command(self)
 
 
 class ListFlag(Flag[Any, Any, None]):
@@ -251,7 +274,7 @@ class ListFlag(Flag[Any, Any, None]):
             short=short,
             long=long,
             description=description,
-            method=Switch[Any, Any, NoReturn, None](
+            method=Switch[Any, Any, None, None](
                 on_presence=lambda ctx: _print_and_exit(
                     _list_message(ctx.command), file=ctx.command.file
                 ),
