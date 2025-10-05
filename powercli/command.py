@@ -5,7 +5,6 @@ from __future__ import annotations
 __all__ = ["Command"]
 import sys
 import typing
-import warnings
 from collections import deque
 from collections.abc import Generator, Iterable
 from itertools import chain
@@ -14,7 +13,7 @@ from typing import Any
 from attrs import Factory, define, field
 from loguru import logger
 
-from . import exceptions, methods, parser
+from . import exceptions, methods, parser, _style
 from .args import Argument, Flag, Positional, VariadicPositional
 from .category import Category
 from .dependency import Resolver
@@ -323,6 +322,21 @@ class Command[FV, PV]:
         self.add_arg(arg)
         return self
 
+    def _subcommand_path(self) -> str:
+        """Returns a space separated representation of the subcommand path."""
+        parents = list(self.parents())
+        parents.reverse()
+        return " ".join([*(parent.name for parent in parents), self.name])
+
+    def _print_message(self, message: str, file: typing.TextIO | None = None) -> None:
+        """Prints a message originating from this (sub)command."""
+        file = file or self.file
+        file.write(f"{self._subcommand_path()}: {message}")
+
+    def _print_warning(self, message: str, file: typing.TextIO | None = None) -> None:
+        """Prints a warning originating from this (sub)command."""
+        return self._print_message(f"{_style.WARNING:warning}: {message}")
+
     def parse_args(self, args: list[str] | None = None) -> parser.ParsedCommand[FV, PV]:
         """Parses arguments from `args`, or, if `None` from `argv`."""
         if args is None:
@@ -348,7 +362,7 @@ class Command[FV, PV]:
                     description += f" since {self.deprecation.since}"
                 if self.deprecation.message is not None:
                     description += f": {self.deprecation.message}"
-            warnings.warn(description, DeprecationWarning)
+            self._print_warning(description)
 
         # initially fill methods with certain methods
         for f in self._flags:
@@ -643,7 +657,7 @@ class Command[FV, PV]:
                         message += f" since {deprecated.since}"
                     if deprecated.message is not None:
                         message += f": {deprecated.message}"
-                warnings.warn(message, DeprecationWarning)
+                self._print_warning(message)
 
         return parsed_command
 

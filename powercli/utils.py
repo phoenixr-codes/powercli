@@ -8,7 +8,7 @@ from collections import deque
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from enum import StrEnum
 from typing import TYPE_CHECKING, Any
-from warnings import warn
+from warnings import warn, deprecated
 
 from attrs import define
 
@@ -19,6 +19,7 @@ if TYPE_CHECKING:
     from .typedefs import Context, Converter, WithContext
 
 
+@deprecated("powercli.utils.static is deprecated in favor of powercli.static.Static")
 def static[T](value: T, /) -> Static[T]:
     """
     Returns a callable which depends the provided value ignoring the supplied
@@ -39,7 +40,6 @@ def static[T](value: T, /) -> Static[T]:
     )
     ```
     """
-    warn("`utils.static` is deprecated; use `static.Static` instead", DeprecationWarning)
     return Static(value)
 
 

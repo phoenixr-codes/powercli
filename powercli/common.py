@@ -186,6 +186,9 @@ class VersionFlag(Flag[Any, Any, None]):
         )
         self.version = version
 
+# def _interactive() -> bool:
+#     """Returns whether the user is running in interactive mode."""
+#     return hasattr(sys, "ps1")
 
 def _list_message(cmd: Command[Any, Any], *, parents: list[str] | None = None) -> str:
     """Creates a string representation that lists every subcommand of `cmd`."""
