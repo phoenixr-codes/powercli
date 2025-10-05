@@ -385,3 +385,9 @@ def test_command_deprecation() -> None:
     cmd.add_subcommand(Command(name="foo", deprecation=True))
     with pytest.deprecated_call():
         cmd.parse_args(["foo"])
+
+
+def test_command_short_prefix_without_flags() -> None:
+    cmd: Command[None, None] = Command()
+    with pytest.raises(RuntimeError):
+        cmd.parse_args(["-"])

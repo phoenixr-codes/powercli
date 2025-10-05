@@ -398,10 +398,7 @@ class Command[FV, PV]:
                 elif self._is_short(part):
                     logger.debug("detected short prefix")
                     assert self.prefix_short is not None
-                    names = [*part.removeprefix(self.prefix_short)]
-                    # FIXME: Names may be empty when user provides `cmd -`. In
-                    #        this case we should probably raise a (syntax)
-                    #        error.
+                    names = [*part.removeprefix(self.prefix_short)] or [""]
                 else:
                     assert False, "unreachable"
 
