@@ -19,6 +19,10 @@
 - `list` command and `--list` flag now display all nested subcommands.
 - `list` command and `--list` flag now display commands with their description.
 
+### Fixed
+
+- Make `cmd -` and `cmd --` behave equivalent.
+
 ## [0.1.1] - 2025-06-18
 
 ### Changed
