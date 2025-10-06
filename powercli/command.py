@@ -330,7 +330,7 @@ class Command[FV, PV]:
 
     def _print_message(self, message: str, file: typing.TextIO | None = None) -> None:
         """Prints a message originating from this (sub)command."""
-        file = file or self.file
+        file = file or sys.stderr
         file.write(f"{self._subcommand_path()}: {message}")
 
     def _print_warning(self, message: str, file: typing.TextIO | None = None) -> None:

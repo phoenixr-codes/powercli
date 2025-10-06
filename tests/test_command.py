@@ -1,4 +1,3 @@
-import re
 from typing import Never
 
 import pytest
@@ -338,7 +337,7 @@ def test_subcommand() -> None:
     assert subargs.value_of_flag("f") == [12]
 
 
-def test_flag_deprecation_with_bool() -> None:
+def test_flag_deprecation_with_bool(capsys: pytest.CaptureFixture[str]) -> None:
     cmd: Command[int, None]
     cmd = Command()
     cmd.flag(identifier="f", short="f", values=[("INT", int)])
@@ -348,14 +347,17 @@ def test_flag_deprecation_with_bool() -> None:
         values=[("INT", int)],
         deprecation=lambda ctx: ctx.value_of("f") == [1],
     )
-    with pytest.deprecated_call():
-        cmd.parse_args(["-f", "1", "-g", "2"])
+    cmd.parse_args(["-f", "1", "-g", "2"])
+    captured = capsys.readouterr()
+    assert "warning" in captured.err
     args = cmd.parse_args(["-f", "2", "-g", "2"])
+    captured = capsys.readouterr()
+    assert "warning" not in captured.err
     assert args.value_of_flag("f") == [2]
     assert args.value_of_flag("g") == [2]
 
 
-def test_flag_deprecation_with_object() -> None:
+def test_flag_deprecation_with_object(capsys: pytest.CaptureFixture[str]) -> None:
     deprecation = Deprecation("use -h instead when -f is 1", since="1.0")
 
     # only for type checking
@@ -373,18 +375,19 @@ def test_flag_deprecation_with_object() -> None:
     cmd.flag(
         identifier="g", short="g", values=[("INT", int)], deprecation=f_deprecation
     )
-    with pytest.deprecated_call(
-        match=f"{re.escape(deprecation.since)}: {re.escape(deprecation.message)}"
-    ):
-        cmd.parse_args(["-f", "1", "-g", "2"])
+    cmd.parse_args(["-f", "1", "-g", "2"])
+    captured = capsys.readouterr()
+    print(captured.err)
+    assert f"{deprecation.since}: {deprecation.message}" in captured.err
 
 
-def test_command_deprecation() -> None:
+def test_command_deprecation(capsys: pytest.CaptureFixture[str]) -> None:
     cmd: Command[None, None]
     cmd = Command()
     cmd.add_subcommand(Command(name="foo", deprecation=True))
-    with pytest.deprecated_call():
-        cmd.parse_args(["foo"])
+    cmd.parse_args(["foo"])
+    captured = capsys.readouterr()
+    assert "warning" in captured.err
 
 
 def test_command_short_prefix_without_flags() -> None:
