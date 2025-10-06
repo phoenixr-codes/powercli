@@ -18,11 +18,11 @@ class Static[T]:
     # Examples
 
     ```python
-    from powercli import Flag
+    from powercli import Flag, Static
 
     Flag(
         # ...
-        required=static(True)
+        required=Static(True)
     )
     ```
     """
