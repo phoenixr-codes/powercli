@@ -2,11 +2,12 @@ from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
-from adorable import color  # type: ignore
+from adorable import color
 
 from powercli.args import Flag
 from powercli.command import Command
-from powercli.utils import one_of, static
+from powercli.static import Static
+from powercli.utils import one_of
 
 _PY_BLUE = color.from_hex(0x306998)
 _PY_YELLOW = color.from_hex(0xFFD43B)
@@ -22,7 +23,7 @@ cmd.add_args(
     one_of(
         Flag(identifier="build-man", long="man", description="Build man page"),
         Flag(identifier="build-md", long="markdown", description="Build Markdown"),
-        required=static(True),
+        required=Static(True),
     )
 )
 
@@ -38,5 +39,5 @@ cmd.flag(
     long="obj",
     description="The name of the object which represents the command (default: cmd)",
     values=[("IDENTIFIER", str)],
-    default=static(["cmd"]),
+    default=Static(["cmd"]),
 )
