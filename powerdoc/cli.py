@@ -38,7 +38,7 @@ cmd.flag(
     identifier="section",
     short="s",
     long="section",
-    description="Specify the section of the man page (default: '1')",
+    description="Specify the section of the man page",
     values=[("SECTION", str)],
     default=Static(["1"]),
 )
@@ -46,7 +46,7 @@ cmd.flag(
 cmd.flag(
     identifier="obj",
     long="obj",
-    description="The name of the object which represents the command (default: cmd)",
+    description="The name of the object which represents the command",
     values=[("IDENTIFIER", str)],
     default=Static(["cmd"]),
 )

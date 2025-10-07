@@ -9,6 +9,7 @@
 - `powercli.utils.member_of` for easy integration of string enums.
 - `--section` options for PowerDOC.
 - Generate description for flags in manpage output in PowerDOC.
+- Help output adds "default", "deprecated" and "required" tags if inferable.
 
 ### Changed
 

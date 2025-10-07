@@ -206,6 +206,8 @@ def pretty_flag(cmd: Command[Any, Any], flag: Flag[Any, Any, Any]) -> str:
         tags.append(f"{tag_text_color.on(color.Color3bit.from_name("red")):(deprecated)}")
     if isinstance(flag.required, Static) and (isinstance(flag.required.value, str) or flag.required.value):
         tags.append(f"{tag_text_color.on(color.Color3bit(ansi=4)):(required)}")
+    if isinstance(flag.default, Static):
+        tags.append(f"{BOLD:(default: {" ".join(map(str, flag.default.value))})}")
     return _add_description(
         f"{', '.join(parts)} {values(flag)}",
         indent=2,

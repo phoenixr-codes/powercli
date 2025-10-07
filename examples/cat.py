@@ -15,7 +15,7 @@ cmd.pos(identifier="file", name="FILE", into=Path, default=Static(None))
 cmd.flag(
     identifier="theme",
     long="theme",
-    description="Color theme, aka Pygments style (default: github-dark)",
+    description="Color theme, aka Pygments style",
     values=[("THEME", str)],
     default=Static(["github-dark"]),
 )
@@ -38,7 +38,7 @@ cmd.flag(
     long="padding",
     description="Apply padding",
     values=[("PADDING", int)],
-    default=Static(0),
+    default=Static([0]),
 )
 
 if __name__ == "__main__":
