@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-__all__ = ["Command"]
+__all__ = ["Command", "Example"]
 import sys
 import typing
 from collections import deque
-from collections.abc import Generator, Iterable
+from collections.abc import Generator, Iterable, Collection
 from itertools import chain
 from typing import Any
 
@@ -22,6 +22,19 @@ from .typedefs import Converter, Identifier
 from .utils import ArgIterator, _did_you_mean, _single_name_of_arg
 
 logger.disable(__name__)
+
+
+@define
+class Example:
+    args: Collection[str]
+    """The arguments of the command.
+
+    This should not contain the name of any parent commands or the command
+    itself.
+    """
+
+    description: str | None
+    """A one-sentence describing what the example does."""
 
 
 @define(kw_only=True)
@@ -125,6 +138,9 @@ class Command[FV, PV]:
 
     deprecation: Deprecation | bool | None = None
     """Whether this command is deprecated."""
+
+    examples: Collection[Example] = Factory(list)
+    """A collection of examples describing the usage of this command."""
 
     file: typing.TextIO = Factory(lambda: sys.stdout)
     """The stream this command writes text to."""

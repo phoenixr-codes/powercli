@@ -5,6 +5,7 @@ from loguru import logger
 from rich import print
 
 from powercli import Category, Command
+from powercli.command import Example
 
 logger.enable("powercli.command")
 logger.add(sys.stdout, level="TRACE")
@@ -16,6 +17,10 @@ category_output = Category("output")
 cmd: Command[Any, Any] = Command(
     name="nullc",
     description="The C compiler that does not actually do anything at all",
+    examples=[
+        Example(["run main.c"], "Compile and run a C program"),
+        Example(["compile", "main.c", "-o", "main"], "Compile a C program"),
+    ]
 )
 cmd.flag(identifier="color", long="no-color", description="Disables colored output", category=category_output)
 cmd.flag(identifier="json", long="json", description="Formats output as JSON", category=category_output)

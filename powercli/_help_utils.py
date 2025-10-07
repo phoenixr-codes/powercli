@@ -10,6 +10,7 @@ __all__ = [
     "help_message",
     "usage",
     "options",
+    "examples",
     "pretty_flag",
     "values",
     "commands",
@@ -35,6 +36,8 @@ if TYPE_CHECKING:
     from .command import Command
 
 
+PROMPT_PREFIX = "$"
+
 # See also: https://phoenixr-codes.github.io/adorable/caution-ansi-strings.html#getting-the-visible-length-of-a-string
 def len(x: Any, /) -> int:
     """Returns the length of an object.
@@ -51,7 +54,7 @@ def terminal_width() -> int:
     return shutil.get_terminal_size().columns
 
 
-def _indent_text(text: str, indent: str, indent_initial: bool) -> str:
+def _indent_text(text: str, indent: str, *, indent_initial: bool) -> str:
     """Indents each line with `indent` after wrapping it to a maximum with of the terminal's width.
 
     If `indent_initial` is `False`, then the first line is not indented.
@@ -149,6 +152,9 @@ def help_message(cmd: Command[Any, Any]) -> str:
     if cmd.has_subcommand():
         lines.append(commands(cmd))
         lines.append("")
+    if cmd.examples:
+        lines.append(examples(cmd))
+        lines.append("")
     if cmd.epilog is not None:
         lines.append("")
         lines.append(cmd.epilog)
@@ -175,6 +181,21 @@ def options(cmd: Command[Any, Any]) -> str:
         flgs.append(flag)
     for flag in chain.from_iterable(categories.values()):
         lines.extend(pretty_flag(cmd, flag).splitlines())
+    return "\n".join(lines)
+
+def examples(cmd: Command[Any, Any]) -> str:
+    """Returns examples of a command."""
+    lines = []
+    lines.append(f"{BOLD:Examples:}")
+    lines.append("")
+    for example in cmd.examples:
+        if example.description:
+            lines.append(f"{BOLD:{_indent_text(example.description, indent="  ", indent_initial=True)}}")
+        # TODO: shlex escape args
+        command_line = f"{PROMPT_PREFIX} {cmd._subcommand_path()} {" ".join(example.args)}"
+        # TODO: syntax highlighting
+        lines.append(_indent_text(command_line, indent="  ", indent_initial=True))
+        lines.append("")
     return "\n".join(lines)
 
 

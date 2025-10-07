@@ -10,6 +10,7 @@
 - `--section` options for PowerDOC.
 - Generate description for flags in manpage output in PowerDOC.
 - Help output adds "default", "deprecated" and "required" tags if inferable.
+- Support for examples via `powercli.command.Command.examples`.
 
 ### Changed
 
