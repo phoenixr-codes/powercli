@@ -35,6 +35,15 @@ cmd.pos(
 )
 
 cmd.flag(
+    identifier="section",
+    short="s",
+    long="section",
+    description="Specify the section of the man page (default: '1')",
+    values=[("SECTION", str)],
+    default=Static(["1"]),
+)
+
+cmd.flag(
     identifier="obj",
     long="obj",
     description="The name of the object which represents the command (default: cmd)",

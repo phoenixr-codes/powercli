@@ -34,7 +34,8 @@ def run() -> None:
 
     builder: Builder
     if args.is_present("build-man"):
-        builder = ManBuilder(cmd)
+        [section] = cast(list[int], args.value_of("section"))
+        builder = ManBuilder(cmd, section=section)
     elif args.is_present("build-md"):
         builder = MarkdownBuilder(cmd)
     else:

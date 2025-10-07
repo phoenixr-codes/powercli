@@ -2,6 +2,9 @@
 Utilities for working with help messages.
 """
 
+# TODO: if default attribute of argument is static, append the value to the
+#       description
+
 from __future__ import annotations
 
 __all__ = [
@@ -33,13 +36,6 @@ if TYPE_CHECKING:
     from .args import Flag
     from .category import Category
     from .command import Command
-
-
-DESCRIPTION_INDENTATION = 31
-"""
-The amount of columns next to the argument/command name(s) required to put the
-description there. Otherwise the first line is placed underneath.
-"""
 
 
 # See also: https://phoenixr-codes.github.io/adorable/caution-ansi-strings.html#getting-the-visible-length-of-a-string
@@ -87,6 +83,7 @@ def _add_description(
     indent: int,
     description: str | None,
     long_description: str | None,
+    description_indentation: int = 31,
     tags: Collection[str] | None = None,
 ) -> str:
     """
@@ -100,6 +97,9 @@ def _add_description(
       where it spans over the first line.
     * `description` - The (short) description.
     * `long_description` - The long description.
+    * `description_indentation` - The amount of columns next to the
+      argument/command name(s) required to put the description there. Otherwise
+      the first line is placed underneath.
     * `tags` - Additional tags to append to the right hand side.
     """
     text = " " * indent + lhs
@@ -116,18 +116,18 @@ def _add_description(
             full_description += " "
         full_description += " ".join(tags)
     if full_description:
-        space_between = DESCRIPTION_INDENTATION - len(text)
+        space_between = description_indentation - len(text)
         if space_between <= 0:
             text += "\n"
             text += _indent_text(
                 full_description,
-                indent=" " * DESCRIPTION_INDENTATION,
+                indent=" " * description_indentation,
                 indent_initial=True,
             )
         else:
             text = _indent_text(
                 text + " " * space_between + full_description,
-                indent=" " * DESCRIPTION_INDENTATION,
+                indent=" " * description_indentation,
                 indent_initial=False,
             )
     return text

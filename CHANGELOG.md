@@ -7,6 +7,8 @@
 - Support for positionals with variable amount of values (#1).
 - Implementation of `powercli.args.Flag.deprecation` to deprecate flags (#2).
 - `powercli.utils.member_of` for easy integration of string enums.
+- `--section` options for PowerDOC.
+- Generate description for flags in manpage output in PowerDOC.
 
 ### Changed
 
