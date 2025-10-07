@@ -2,9 +2,6 @@
 Utilities for working with help messages.
 """
 
-# TODO: if default attribute of argument is static, append the value to the
-#       description
-
 from __future__ import annotations
 
 __all__ = [
