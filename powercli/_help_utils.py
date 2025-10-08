@@ -26,7 +26,8 @@ from itertools import chain
 from typing import TYPE_CHECKING, Any
 
 import wraptext
-from adorable import BOLD, color  # type: ignore
+from adorable import ansi, color
+from adorable.common import BOLD, MAROON, NAVY, BLACK
 
 from .static import Static
 
@@ -204,12 +205,12 @@ def pretty_flag(cmd: Command[Any, Any], flag: Flag[Any, Any, Any]) -> str:
     parts = []
     category = flag.category
     clr = (
-        color.empty()
+        ansi.empty()
         if category is None
-        else color.from_hex(
+        else color.from_rgb(
             category.color or blake2s(category.title.encode()).digest()[0]
         )
-    ).fg
+    )
     if flag.short is not None and cmd.prefix_short is not None:
         parts.extend(
             [f"{clr:{cmd.prefix_short + name}}" for name in flag.visible_short_names()]
@@ -219,11 +220,11 @@ def pretty_flag(cmd: Command[Any, Any], flag: Flag[Any, Any, Any]) -> str:
             [f"{clr:{cmd.prefix_long + name}}" for name in flag.visible_long_names()]
         )
     tags = []
-    tag_text_color = color.Color3bit.from_hex(0x000)
+    tag_text_color = BLACK
     if isinstance(flag.deprecation, Static) and flag.deprecation.value:
-        tags.append(f"{tag_text_color.on(color.Color3bit.from_name("red")):(deprecated)}")
+        tags.append(f"{tag_text_color.on(MAROON):(deprecated)}")
     if isinstance(flag.required, Static) and (isinstance(flag.required.value, str) or flag.required.value):
-        tags.append(f"{tag_text_color.on(color.Color3bit(ansi=4)):(required)}")
+        tags.append(f"{tag_text_color.on(NAVY):(required)}")
     if isinstance(flag.default, Static):
         tags.append(f"{BOLD:(default: {" ".join(map(str, flag.default.value))})}")
     return _add_description(
@@ -256,11 +257,11 @@ def commands(cmd: Command[Any, Any]) -> str:
         cmds.append(command)
     for category, commands in categories.items():
         clr = (
-            color.empty().fg
+            ansi.empty()
             if category is None
-            else color.from_hex(
+            else color.from_rgb(
                 category.color or blake2s(category.title.encode()).digest()[0]
-            ).fg
+            )
         )
         for command in commands:
             lines.extend(

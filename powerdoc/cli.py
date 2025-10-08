@@ -9,9 +9,9 @@ from powercli.command import Command
 from powercli.static import Static
 from powercli.utils import one_of
 
-_PY_BLUE = color.from_hex(0x306998)
-_PY_YELLOW = color.from_hex(0xFFD43B)
-_BANNER = f"{deepcopy(_PY_YELLOW).on(deepcopy(_PY_BLUE)):>} {_PY_BLUE.fg:Power}{_PY_YELLOW.fg:DOC}"
+_PY_BLUE = color.from_rgb(0x306998)
+_PY_YELLOW = color.from_rgb(0xFFD43B)
+_BANNER = f"{_PY_YELLOW.on(_PY_BLUE):>} {_PY_BLUE:Power}{_PY_YELLOW:DOC}"
 
 cmd: Command[Any, Any] = Command(
     name="powerdoc",

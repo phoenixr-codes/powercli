@@ -1,3 +1,3 @@
-from adorable.color import Color3bit
+from adorable.common import OLIVE
 
-WARNING = Color3bit(ansi=3).fg
+WARNING = OLIVE
