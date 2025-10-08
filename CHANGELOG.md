@@ -14,6 +14,7 @@
 
 ### Changed
 
+- Require Python 3.13 or greater.
 - Deprecate `powercli.utils.static` in favor of `powercli.static.Static`.
 - Better support for inspecting subcommand arguments (via
   `powercli.parser.ParsedCommand.subcommand()`).

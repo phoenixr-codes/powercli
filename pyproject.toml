@@ -5,7 +5,7 @@ authors = [{ name = "Jonas da Silva" }]
 description = "Build powerful command-line applications in Python"
 license = { text = "GPLv3" }
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.13"
 keywords = ["cli", "command-line"]
 classifiers = [
   "Intended Audience :: Developers",
