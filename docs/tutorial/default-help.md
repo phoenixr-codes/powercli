@@ -14,6 +14,6 @@ if __name__ == "__main__":
     args = cmd.parse_args()
     if not args.raw_args:
         # If the user has not provided anything apart from the command itself ...
-        args = cmd.parse_args(["--help"])  # ... invoke the command with `--help`
+        args = cmd.parse_args([f"{cmd.prefix_long}help"])  # ... invoke the command with `--help`
     # ... do something with args ...
 ```
