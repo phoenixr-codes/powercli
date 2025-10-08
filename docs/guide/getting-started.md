@@ -95,3 +95,20 @@ if __name__ == "__main__":
         filepath = args.value_of("file")
         print(filepath.read_text())
 ```
+
+Python's unpacking syntax comes in handy when acquiring the values of flags as
+{py:meth}`powercli.parser.ParsedCommand.value_of` returns a list in that case.
+
+```python
+from powercli import Command, Static
+import shlex
+
+cmd = Command()
+cmd.flag(identifier="speed", short="s", values=[("FLOAT", float)], required=Static(True))
+cmd.flag(identifier="vec", short="v", values=[("FLOAT", float), ("FLOAT", float)], required=Static(True))
+
+args = cmd.parse_args(shlex.split("-s 23.2 -v 5 2.4"))
+
+[speed] = args.value_of("speed")
+[x, y]  = args.value_of("vec")
+```

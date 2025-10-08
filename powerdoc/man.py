@@ -1,3 +1,5 @@
+# TODO: also generate Command.examples
+
 from collections.abc import Generator
 from datetime import date
 from typing import Any
