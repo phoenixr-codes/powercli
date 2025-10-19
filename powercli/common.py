@@ -25,7 +25,7 @@ from .methods import Switch
 from .static import Static
 
 
-class HelpCommand(Command[Never, Never]):
+class HelpCommand(Command[Any, Any]):
     """A help command."""
 
     def __init__(
@@ -73,7 +73,7 @@ class HelpCommand(Command[Never, Never]):
 
     def parse_args(
         self, args: list[str] | None = None
-    ) -> parser.ParsedCommand[Never, Never]:
+    ) -> Never:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print a help message and exit.
@@ -87,35 +87,15 @@ class HelpCommand(Command[Never, Never]):
         target = target or self.parent
         assert target is not None
         _print_and_exit(help_message(target), status=self.status, file=self.file)
-        return _dummy_parsed_command(self)
 
 
-def _print_and_exit(*args: Any, status: int = 0, **kwargs: Any) -> None:
+def _print_and_exit(*args: Any, status: int = 0, **kwargs: Any) -> Never:
     """Prints text and exits with `status`.
 
     This function does not exit if running interactively.
     """
     print(*args, **kwargs)
-    if not _interactive():
-        sys.exit(status)
-
-
-def _dummy_parsed_command(
-    command: Command[Any, Any],
-) -> parser.ParsedCommand[Never, Never]:
-    """Returns a dummy instance of a parsed command.
-
-    This is only used for commands that usually exit the program but not when
-    running that command in an interactive session (e.g. Python REPL).
-    """
-    return parser.ParsedCommand(
-        parsed_subcommand=None,
-        parsed_positionals=[],
-        parsed_variadic_positional=None,
-        parsed_flags=[],
-        raw_args=[],
-        command=command,
-    )
+    sys.exit(status)
 
 
 class HelpFlag(Flag[Any, Any, None]):
@@ -153,7 +133,7 @@ class HelpFlag(Flag[Any, Any, None]):
         )
 
 
-class VersionCommand(Command[Never, Never]):
+class VersionCommand(Command[Any, Any]):
     """A version command."""
 
     def __init__(
@@ -176,14 +156,13 @@ class VersionCommand(Command[Never, Never]):
 
     def parse_args(
         self, args: list[str] | None = None
-    ) -> parser.ParsedCommand[Never, Never]:
+    ) -> Never:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print the version and exit.
         """
         _pargs = super().parse_args(args)
         _print_and_exit(self.version, file=self.file)
-        return _dummy_parsed_command(self)
 
 
 class VersionFlag(Flag[Any, Any, None]):
@@ -207,18 +186,13 @@ class VersionFlag(Flag[Any, Any, None]):
         super().__init__(
             long=long,
             description=description,
-            method=Switch[Any, Any, None, None](
+            method=Switch[Any, Any, Never, None](
                 on_presence=lambda ctx: _print_and_exit(version, file=ctx.command.file),
                 on_absence=Static(None),
             ),
             **kwargs,
         )
         self.version = version
-
-
-def _interactive() -> bool:
-    """Returns whether the user is running in interactive mode."""
-    return hasattr(sys, "ps1")
 
 
 def _list_message(cmd: Command[Any, Any], *, parents: list[str] | None = None) -> str:
@@ -245,7 +219,7 @@ def _list_message(cmd: Command[Any, Any], *, parents: list[str] | None = None) -
     return "\n".join(lines)
 
 
-class ListCommand(Command[Never, Never]):
+class ListCommand(Command[Any, Any]):
     """A list command."""
 
     def __init__(
@@ -259,7 +233,7 @@ class ListCommand(Command[Never, Never]):
 
     def parse_args(
         self, args: list[str] | None = None
-    ) -> parser.ParsedCommand[Never, Never]:
+    ) -> Never:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print a list of subcommands and exit.
@@ -267,7 +241,6 @@ class ListCommand(Command[Never, Never]):
         _pargs = super().parse_args(args)
         assert self.parent is not None
         _print_and_exit(_list_message(self.parent), file=self.file)
-        return _dummy_parsed_command(self)
 
 
 class ListFlag(Flag[Any, Any, None]):
