@@ -27,8 +27,8 @@ from itertools import chain
 from typing import TYPE_CHECKING, Any
 
 import wraptext
-from adorable import ansi, color
-from adorable.color import Color, RGB
+from adorable import color
+from adorable.color import Color
 from adorable.common import BLACK, BOLD, MAROON, NAVY
 
 from .static import Static
@@ -209,9 +209,7 @@ def examples(cmd: Command[Any, Any]) -> str:
             lines.append(
                 f"{BOLD:{_indent_text(example.description, indent='  ', indent_initial=True)}}"
             )
-        command_line = (
-            f"{PROMPT_PREFIX} {cmd._subcommand_path()} {' '.join(shlex.quote(arg) for arg in example.args)}"
-        )
+        command_line = f"{PROMPT_PREFIX} {cmd._subcommand_path()} {' '.join(shlex.quote(arg) for arg in example.args)}"
         # TODO: syntax highlighting
         lines.append(_indent_text(command_line, indent="  ", indent_initial=True))
         lines.append("")

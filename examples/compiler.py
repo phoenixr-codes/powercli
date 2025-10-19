@@ -1,7 +1,7 @@
 import sys
 from typing import Any
 
-from adorable.common import YELLOW, AQUA, GREEN
+from adorable.common import AQUA, GREEN, YELLOW
 from loguru import logger
 from rich import print
 
