@@ -6,9 +6,9 @@ from typing import Any
 
 from attrs import define, field
 
-from powercli.command import Command
-from powercli.args import Flag
 from powercli._help_utils import _add_description
+from powercli.args import Flag
+from powercli.command import Command
 
 from .builder import Builder
 
@@ -27,7 +27,14 @@ def escape(text: str) -> str:
     text = "".join(lines)
     return text
 
-def _prefix_flag(command: Command[Any, Any], flag: Flag[Any, Any, Any], *, visible_aliases: bool = True, hidden_aliases: bool = False) -> Generator[str, None, None]:
+
+def _prefix_flag(
+    command: Command[Any, Any],
+    flag: Flag[Any, Any, Any],
+    *,
+    visible_aliases: bool = True,
+    hidden_aliases: bool = False,
+) -> Generator[str, None, None]:
     """Generates each name of a flag with the matching prefix."""
     if flag.short is not None and command.prefix_short is not None:
         yield command.prefix_short + flag.short
@@ -111,7 +118,7 @@ class ManBuilder(Builder):
                     indent=0,
                     description_indentation=indent,
                     description=flag.description,
-                    long_description=flag.long_description
+                    long_description=flag.long_description,
                 )
                 yield text
                 yield ""

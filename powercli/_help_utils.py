@@ -18,8 +18,8 @@ __all__ = [
 ]
 
 import builtins
-from collections.abc import Collection
 import shutil
+from collections.abc import Collection
 from functools import partial
 from hashlib import blake2s
 from itertools import chain
@@ -27,7 +27,7 @@ from typing import TYPE_CHECKING, Any
 
 import wraptext
 from adorable import ansi, color
-from adorable.common import BOLD, MAROON, NAVY, BLACK
+from adorable.common import BLACK, BOLD, MAROON, NAVY
 
 from .static import Static
 
@@ -38,6 +38,7 @@ if TYPE_CHECKING:
 
 
 PROMPT_PREFIX = "$"
+
 
 # See also: https://phoenixr-codes.github.io/adorable/caution-ansi-strings.html#getting-the-visible-length-of-a-string
 def len(x: Any, /) -> int:
@@ -184,6 +185,7 @@ def options(cmd: Command[Any, Any]) -> str:
         lines.extend(pretty_flag(cmd, flag).splitlines())
     return "\n".join(lines)
 
+
 def examples(cmd: Command[Any, Any]) -> str:
     """Returns examples of a command."""
     lines = []
@@ -191,9 +193,13 @@ def examples(cmd: Command[Any, Any]) -> str:
     lines.append("")
     for example in cmd.examples:
         if example.description:
-            lines.append(f"{BOLD:{_indent_text(example.description, indent="  ", indent_initial=True)}}")
+            lines.append(
+                f"{BOLD:{_indent_text(example.description, indent='  ', indent_initial=True)}}"
+            )
         # TODO: shlex escape args
-        command_line = f"{PROMPT_PREFIX} {cmd._subcommand_path()} {" ".join(example.args)}"
+        command_line = (
+            f"{PROMPT_PREFIX} {cmd._subcommand_path()} {' '.join(example.args)}"
+        )
         # TODO: syntax highlighting
         lines.append(_indent_text(command_line, indent="  ", indent_initial=True))
         lines.append("")
@@ -223,10 +229,12 @@ def pretty_flag(cmd: Command[Any, Any], flag: Flag[Any, Any, Any]) -> str:
     tag_text_color = BLACK
     if isinstance(flag.deprecation, Static) and flag.deprecation.value:
         tags.append(f"{tag_text_color.on(MAROON):(deprecated)}")
-    if isinstance(flag.required, Static) and (isinstance(flag.required.value, str) or flag.required.value):
+    if isinstance(flag.required, Static) and (
+        isinstance(flag.required.value, str) or flag.required.value
+    ):
         tags.append(f"{tag_text_color.on(NAVY):(required)}")
     if isinstance(flag.default, Static):
-        tags.append(f"{BOLD:(default: {" ".join(map(str, flag.default.value))})}")
+        tags.append(f"{BOLD:(default: {' '.join(map(str, flag.default.value))})}")
     return _add_description(
         f"{', '.join(parts)} {values(flag)}",
         indent=2,

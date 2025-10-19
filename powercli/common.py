@@ -71,7 +71,9 @@ class HelpCommand(Command[Never, Never]):
                 return cmd
         raise RuntimeError(f"no command name {name!r}")
 
-    def parse_args(self, args: list[str] | None = None) -> parser.ParsedCommand[Never, Never]:
+    def parse_args(
+        self, args: list[str] | None = None
+    ) -> parser.ParsedCommand[Never, Never]:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print a help message and exit.
@@ -97,7 +99,10 @@ def _print_and_exit(*args: Any, status: int = 0, **kwargs: Any) -> None:
     if not _interactive():
         sys.exit(status)
 
-def _dummy_parsed_command(command: Command[Any, Any]) -> parser.ParsedCommand[Never, Never]:
+
+def _dummy_parsed_command(
+    command: Command[Any, Any],
+) -> parser.ParsedCommand[Never, Never]:
     """Returns a dummy instance of a parsed command.
 
     This is only used for commands that usually exit the program but not when
@@ -109,7 +114,7 @@ def _dummy_parsed_command(command: Command[Any, Any]) -> parser.ParsedCommand[Ne
         parsed_variadic_positional=None,
         parsed_flags=[],
         raw_args=[],
-        command=command
+        command=command,
     )
 
 
@@ -169,7 +174,9 @@ class VersionCommand(Command[Never, Never]):
         super().__init__(name=name, description=description, **kwargs)
         self.version = version
 
-    def parse_args(self, args: list[str] | None = None) -> parser.ParsedCommand[Never, Never]:
+    def parse_args(
+        self, args: list[str] | None = None
+    ) -> parser.ParsedCommand[Never, Never]:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print the version and exit.
@@ -208,9 +215,11 @@ class VersionFlag(Flag[Any, Any, None]):
         )
         self.version = version
 
+
 def _interactive() -> bool:
     """Returns whether the user is running in interactive mode."""
     return hasattr(sys, "ps1")
+
 
 def _list_message(cmd: Command[Any, Any], *, parents: list[str] | None = None) -> str:
     """Creates a string representation that lists every subcommand of `cmd`."""
@@ -248,7 +257,9 @@ class ListCommand(Command[Never, Never]):
         """Initializes the list command."""
         super().__init__(name=name, description=description, **kwargs)
 
-    def parse_args(self, args: list[str] | None = None) -> parser.ParsedCommand[Never, Never]:
+    def parse_args(
+        self, args: list[str] | None = None
+    ) -> parser.ParsedCommand[Never, Never]:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print a list of subcommands and exit.

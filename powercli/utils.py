@@ -8,7 +8,7 @@ from collections import deque
 from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
 from enum import StrEnum
 from typing import TYPE_CHECKING, Any
-from warnings import warn, deprecated
+from warnings import deprecated, warn
 
 from attrs import define
 

@@ -1,8 +1,11 @@
 from __future__ import annotations
 
-from attrs import frozen
 from typing import Any
+
+from attrs import frozen
+
 from .typedefs import Context
+
 
 @frozen
 class Static[T]:

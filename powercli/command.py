@@ -6,14 +6,14 @@ __all__ = ["Command", "Example"]
 import sys
 import typing
 from collections import deque
-from collections.abc import Generator, Iterable, Collection
+from collections.abc import Collection, Generator, Iterable
 from itertools import chain
 from typing import Any
 
 from attrs import Factory, define, field
 from loguru import logger
 
-from . import exceptions, methods, parser, _style
+from . import _style, exceptions, methods, parser
 from .args import Argument, Flag, Positional, VariadicPositional
 from .category import Category
 from .dependency import Resolver

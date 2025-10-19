@@ -20,11 +20,26 @@ cmd: Command[Any, Any] = Command(
     examples=[
         Example(["run main.c"], "Compile and run a C program"),
         Example(["compile", "main.c", "-o", "main"], "Compile a C program"),
-    ]
+    ],
 )
-cmd.flag(identifier="color", long="no-color", description="Disables colored output", category=category_output)
-cmd.flag(identifier="json", long="json", description="Formats output as JSON", category=category_output)
-cmd.flag(identifier="offline", long="offline", description="Prevent downloading packages", category=category_pm)
+cmd.flag(
+    identifier="color",
+    long="no-color",
+    description="Disables colored output",
+    category=category_output,
+)
+cmd.flag(
+    identifier="json",
+    long="json",
+    description="Formats output as JSON",
+    category=category_output,
+)
+cmd.flag(
+    identifier="offline",
+    long="offline",
+    description="Prevent downloading packages",
+    category=category_pm,
+)
 cmd.add_subcommand(
     Command(
         name="build",
