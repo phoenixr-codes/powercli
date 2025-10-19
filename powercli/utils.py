@@ -55,6 +55,7 @@ def member_of(enum: type[StrEnum], *, ignore_case: bool = True) -> Converter[str
     """
 
     def to_enum_member(raw: str) -> str:
+        """Converts a raw value into the according enum member."""
         for member in enum:
             if ignore_case and member.casefold() == raw.casefold():
                 return member

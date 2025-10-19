@@ -26,6 +26,8 @@ logger.disable(__name__)
 
 @define
 class Example:
+    """An example describing the usage of a command."""
+
     args: Collection[str]
     """The arguments of the command.
 

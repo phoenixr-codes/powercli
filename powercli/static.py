@@ -1,3 +1,5 @@
+"""Declare values used in PowerCLI API as static."""
+
 from __future__ import annotations
 
 from typing import Any

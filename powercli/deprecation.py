@@ -1,3 +1,5 @@
+"""Management of deprecation of the CLI."""
+
 from __future__ import annotations
 
 from attrs import define, field
@@ -5,6 +7,8 @@ from attrs import define, field
 
 @define
 class Deprecation:
+    """A deprecation that can be applied on commands and arguments."""
+
     message: str | None = None
     """
     An optional message describing the reason and/or alternatives of the
