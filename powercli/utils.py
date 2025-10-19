@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-__all__ = ["static", "one_of", "ArgIterator"]
+__all__ = ["static", "member_of", "one_of", "ArgIterator"]
 import difflib
 from collections import deque
-from collections.abc import Callable, Iterable, Iterator, Mapping, Sequence
+from collections.abc import Iterable, Iterator, Sequence
 from enum import StrEnum
-from typing import TYPE_CHECKING, Any
-from warnings import deprecated, warn
+from typing import TYPE_CHECKING
+from warnings import deprecated
 
 from attrs import define
 

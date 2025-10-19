@@ -1,6 +1,7 @@
 import sys
 from typing import Any
 
+from adorable.common import YELLOW, AQUA, GREEN
 from loguru import logger
 from rich import print
 
@@ -10,15 +11,15 @@ from powercli.command import Example
 logger.enable("powercli.command")
 logger.add(sys.stdout, level="TRACE")
 
-category_pm = Category("package management")
-category_build = Category("build")
-category_output = Category("output")
+category_pm = Category("package management", color=AQUA)
+category_build = Category("build", color=GREEN)
+category_output = Category("output", color=YELLOW)
 
 cmd: Command[Any, Any] = Command(
     name="nullc",
     description="The C compiler that does not actually do anything at all",
     examples=[
-        Example(["run main.c"], "Compile and run a C program"),
+        Example(["run", "main.c"], "Compile and run a C program"),
         Example(["compile", "main.c", "-o", "main"], "Compile a C program"),
     ],
 )

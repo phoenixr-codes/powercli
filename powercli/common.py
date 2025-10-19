@@ -17,7 +17,6 @@ __all__ = [
 import sys
 from typing import Any, Never, cast
 
-from . import parser
 from ._help_utils import _add_description, help_message
 from .args import Flag
 from .command import Command
@@ -71,9 +70,7 @@ class HelpCommand(Command[Any, Any]):
                 return cmd
         raise RuntimeError(f"no command name {name!r}")
 
-    def parse_args(
-        self, args: list[str] | None = None
-    ) -> Never:
+    def parse_args(self, args: list[str] | None = None) -> Never:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print a help message and exit.
@@ -154,9 +151,7 @@ class VersionCommand(Command[Any, Any]):
         super().__init__(name=name, description=description, **kwargs)
         self.version = version
 
-    def parse_args(
-        self, args: list[str] | None = None
-    ) -> Never:
+    def parse_args(self, args: list[str] | None = None) -> Never:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print the version and exit.
@@ -231,9 +226,7 @@ class ListCommand(Command[Any, Any]):
         """Initializes the list command."""
         super().__init__(name=name, description=description, **kwargs)
 
-    def parse_args(
-        self, args: list[str] | None = None
-    ) -> Never:
+    def parse_args(self, args: list[str] | None = None) -> Never:
         """Parses arguments like {py:meth}`powercli.command.Command.parse_args`.
 
         This function will print a list of subcommands and exit.

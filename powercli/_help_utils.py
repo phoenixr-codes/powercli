@@ -18,6 +18,7 @@ __all__ = [
 ]
 
 import builtins
+import shlex
 import shutil
 from collections.abc import Collection
 from functools import partial
@@ -27,6 +28,7 @@ from typing import TYPE_CHECKING, Any
 
 import wraptext
 from adorable import ansi, color
+from adorable.color import Color, RGB
 from adorable.common import BLACK, BOLD, MAROON, NAVY
 
 from .static import Static
@@ -38,6 +40,17 @@ if TYPE_CHECKING:
 
 
 PROMPT_PREFIX = "$"
+
+
+def _color_for_category(category: Category | None) -> Color[Any]:
+    if category is None:
+        return color.Colorless.from_rgb(0)
+    elif isinstance(category.color, Color):
+        return category.color
+    else:
+        return color.from_rgb(
+            category.color or blake2s(category.title.encode()).digest()[0]
+        )
 
 
 # See also: https://phoenixr-codes.github.io/adorable/caution-ansi-strings.html#getting-the-visible-length-of-a-string
@@ -196,9 +209,8 @@ def examples(cmd: Command[Any, Any]) -> str:
             lines.append(
                 f"{BOLD:{_indent_text(example.description, indent='  ', indent_initial=True)}}"
             )
-        # TODO: shlex escape args
         command_line = (
-            f"{PROMPT_PREFIX} {cmd._subcommand_path()} {' '.join(example.args)}"
+            f"{PROMPT_PREFIX} {cmd._subcommand_path()} {' '.join(shlex.quote(arg) for arg in example.args)}"
         )
         # TODO: syntax highlighting
         lines.append(_indent_text(command_line, indent="  ", indent_initial=True))
@@ -210,13 +222,7 @@ def pretty_flag(cmd: Command[Any, Any], flag: Flag[Any, Any, Any]) -> str:
     """Returns a descriptive information for a flag."""
     parts = []
     category = flag.category
-    clr = (
-        ansi.empty()
-        if category is None
-        else color.from_rgb(
-            category.color or blake2s(category.title.encode()).digest()[0]
-        )
-    )
+    clr = _color_for_category(category)
     if flag.short is not None and cmd.prefix_short is not None:
         parts.extend(
             [f"{clr:{cmd.prefix_short + name}}" for name in flag.visible_short_names()]
@@ -264,13 +270,7 @@ def commands(cmd: Command[Any, Any]) -> str:
         cmds = categories.setdefault(command.category, [])
         cmds.append(command)
     for category, commands in categories.items():
-        clr = (
-            ansi.empty()
-            if category is None
-            else color.from_rgb(
-                category.color or blake2s(category.title.encode()).digest()[0]
-            )
-        )
+        clr = _color_for_category(category)
         for command in commands:
             lines.extend(
                 _add_description(

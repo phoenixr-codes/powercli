@@ -1,7 +1,6 @@
 import sys
 
 from loguru import logger
-from rich import print
 
 from powercli import Command, Static
 from powercli.deprecation import Deprecation

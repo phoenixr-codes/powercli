@@ -15,6 +15,8 @@
 ### Changed
 
 - Require Python 3.13 or greater.
+- Categories now support all syntax for colors supported by the `adorable2`
+  package.
 - Deprecate `powercli.utils.static` in favor of `powercli.static.Static`.
 - Better support for inspecting subcommand arguments (via
   `powercli.parser.ParsedCommand.subcommand()`).
