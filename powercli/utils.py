@@ -49,7 +49,7 @@ def member_of(enum: type[StrEnum], *, ignore_case: bool = True) -> Converter[str
 
     # Parameters
 
-    * `enum` - The enum type with the members' values beeing the possible
+    * `enum` - The enum type with the members' values being the possible
       values.
     * `ignore_case` - Ignore case when finding enum member.
     """
