@@ -485,7 +485,9 @@ class Command[FV, PV]:
                 if done_parsing_variadics and isinstance(
                     positional, VariadicPositional
                 ):
-                    raise RuntimeError("unexpected argument")  # TODO: improve error
+                    raise RuntimeError(
+                        "unexpected argument; flags must not be used between variadic positionals"
+                    )
                 if variadic_pos_values or isinstance(positional, VariadicPositional):
                     variadic_pos_values.append(value)
                     continue
