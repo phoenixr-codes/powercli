@@ -2,6 +2,8 @@
 
 ## [unreleased]
 
+## [0.2.0] - 2025-10-21
+
 ### Added
 
 - Support for positionals with variable amount of values (#1).
@@ -38,6 +40,7 @@
 
 Initial release.
 
-[unreleased]: https://github.com/phoenixr-codes/powercli/compare/v0.1.1...HEAD
+[unreleased]: https://github.com/phoenixr-codes/powercli/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/phoenixr-codes/powercli/compare/v0.1.1...v0.2.0
 [0.1.1]: https://github.com/phoenixr-codes/powercli/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/phoenixr-codes/powercli/releases/tag/v0.1.0
