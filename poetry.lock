@@ -2,14 +2,14 @@
 
 [[package]]
 name = "adorable2"
-version = "0.1.0"
+version = "0.1.1"
 description = "Make text adorable."
 optional = false
 python-versions = ">=3.13"
 groups = ["main"]
 files = [
-    {file = "adorable2-0.1.0-py3-none-any.whl", hash = "sha256:596945ea58d8ae11b1c52b6f2055f8f1c0e20eb5e192e69134035a80dabc55b8"},
-    {file = "adorable2-0.1.0.tar.gz", hash = "sha256:e5475333e04be2aba6e01526b01f1b00fe3b6e63624c2081e2614037ffbb23c0"},
+    {file = "adorable2-0.1.1-py3-none-any.whl", hash = "sha256:200925eb9ed71ffad35d5d2cec8bac7fe51aa092a1ff0b9aa17195d456cfe61a"},
+    {file = "adorable2-0.1.1.tar.gz", hash = "sha256:671b5e91cc5cd65b9b5c99503651b4a0dc441e7ce44ee6bb89fbb7c596612d09"},
 ]
 
 [package.dependencies]
@@ -1396,4 +1396,4 @@ docs = ["Sphinx", "astroid", "furo", "myst-parser", "sphinx-autodoc2", "sphinx-i
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13"
-content-hash = "cbc7007c944b67bb37b367012d980cb7a22f0e7bb03f359fffde00f857053811"
+content-hash = "642a5f863b64b3913e29a05c8fbbd99430bc7742b34ff23d28d84eeb7469c0f9"
