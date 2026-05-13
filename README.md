@@ -2,6 +2,8 @@
 
 > Build powerful command-line applications in Python 🐍⚡
 
+![Preview](./assets/preview.png)
+
 - 📖 [Documentation](https://phoenixr-codes.github.io/powercli)
 - 💡 [Examples](https://github.com/phoenixr-codes/powercli/tree/stable/examples)
 - 🖥️ [Source Code](https://github.com/phoenixr-codes/powercli)
