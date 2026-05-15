@@ -27,6 +27,13 @@ cmd: Command[Any, Any] = Command(
     ],
 )
 cmd.flag(
+    identifier="threads",
+    long="threads",
+    description="The amount of threads to use",
+    values=[("INT", int)],
+    default=Static([1]),
+)
+cmd.flag(
     identifier="color",
     long="no-color",
     description="Disables colored output",
