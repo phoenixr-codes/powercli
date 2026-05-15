@@ -2,6 +2,10 @@
 
 > Build powerful command-line applications in Python 🐍⚡
 
+> [!CAUTION]
+> This repository has been migrated to
+> [Codeberg](https://codeberg.org/jonasds/powercli).
+
 ![Preview](./assets/preview.png)
 
 - 📖 [Documentation](https://phoenixr-codes.github.io/powercli)
